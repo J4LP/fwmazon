@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Fwmazon - Fweddit.com</title>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="navbar navbar-inverse">
+                <div class="container">
+                    <a href="/" class="navbar-brand">J4KB <i class="icon-dropbox"></i> Fwmazon</a></a>
+                    <ul class="nav">
+                        {% if user.is_authenticated %}
+                            <li><a href="/shop">Shop</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">J4LP Links<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
+                                    <li><a href="http://fweddit.com/auth">Auth</a></li>
+                                    <li><a href="http://fweddit.com/forum">Forum</a></li>
+                                    <li><a href="http://fweddit.com/wiki">Wiki</a></li>
+                                    <li><a href="http://fweddit.com/kb">KillBoard</a></li>
+                                    <li><a href="http://fweddit.com/calc">Freight</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
+                            <li><a href="http://fweddit.com/auth">Auth</a></li>
+                            <li><a href="http://fweddit.com/forum">Forum</a></li>
+                            <li><a href="http://fweddit.com/wiki">Wiki</a></li>
+                            <li><a href="http://fweddit.com/kb">KillBoard</a></li>
+                            <li><a href="http://fweddit.com/calc">Freight</a></li>
+                        {% endif %}
+                    </ul>
+                    {% if user.is_authenticated %}
+                        <p class="navbar-text pull-right">Hello {{user.character.name}} ! <a href="/logout" class="navbar-link">Logout</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col col-lg-12">
+                    </div>
+                </div>
+            </div>           
+        </footer>
+        <script type="text/javascript">
+        /*var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-33491732-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();*/
+        </script>
+    </body>
+</html>

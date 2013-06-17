@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    {% if form.errors %}
+        <div class="alert alert-danger">Your username and password didn't match. Please try again.</div>
+    {% endif %}
+    <div id="login">
+        <h1><i class="icon-dropbox"></i> Fwmazon</h1>
+        <h2 id="subtitle">Managing your market orders since 1765</h2>
+        <div class="row" id="login-form">
+            <div class="col col-lg-4 col-offset-4">
+                <form method="post" action="/login">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <label for="username">Auth Username</label>
+                    <input type="text" id="username" name="username" placeholder="Auth Username">
+                    <label for="password">External Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password">
+                    <button type="submit" id="login-button" class="btn btn-primary btn-block">Sign in</button>
+                </form>
+            </div>
+        </div>        
+    </div>
+    
+    
+{% endblock %}

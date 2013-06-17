@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <div id="brand">
+        <h1><i class="icon-dropbox"></i> Fwmazon</h1>
+        <h2 id="subtitle">Managing your market orders since 1765</h2>
+        {% if user.is_authenticated %}
+            <a href="/shop" id="go-shopping" class="btn btn-success"><i class="icon-shopping-cart"></i> Go Shopping !</a>
+        {% else %}
+            <a href="/login" id="login" class="btn btn-primary">Login with your Auth External Account</a>
+        {% endif %}
+    </div>
+    <div id="about">
+        <div class="row">
+            <div class="col col-lg-4">
+                <h4><i class="icon-question"></i> About Fwmazon</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae, totam dignissimos architecto est omnis voluptatibus aperiam odit excepturi accusantium ipsum laudantium nostrum veritatis unde nihil saepe voluptatem deserunt amet accusamus?</p>
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="col col-lg-8">
+                <h4><i class="icon-bar-chart"></i> Statistics</h4>
+                <div id="stats"><h1>STAAAATS</h1></div>
+            </div>
+        </div>
+    </div>
+    
+    
+{% endblock %}

@@ -1,0 +1,106 @@
+html,
+body {
+  background-color: whiteSmoke;
+  font-family: 'Open Sans', sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans', sans-serif;
+}
+a {
+  color: #2980b9;
+}
+a:hover,
+a:focus {
+  color: #34495e;
+}
+a.btn-primary {
+  color: #fff;
+}
+.navbar {
+  border-radius: 0 !important;
+}
+.nav > li {
+  line-height: 30px !important;
+}
+.nav > li > a:hover {
+  background-color: whiteSmoke;
+}
+a.navbar-brand {
+  color: #fff;
+}
+a.navbar-link {
+  color: #2980b9 !important;
+}
+#brand {
+  text-align: center;
+}
+#brand h2#subtitle {
+  font-size: 1em;
+  font-weight: 400;
+}
+#about {
+  margin-top: 40px;
+}
+#about #stats {
+  height: 200px;
+  background-color: #d8dde8;
+}
+#login h1,
+#login h2 {
+  text-align: center;
+}
+#login h2#subtitle {
+  font-size: 1em;
+  font-weight: 400;
+}
+#login #login-form {
+  margin-top: 20px;
+}
+#login #login-form label {
+  margin-top: 20px;
+}
+#login #login-form #login-button {
+  margin-top: 20px;
+}
+#shop #fit-list #fit table {
+  margin-top: 20px;
+}
+#shop #fit-list #fit table td {
+  text-align: center;
+  vertical-align: middle;
+}
+#shop #fit-list #fit table #fit-img {
+  width: 7%;
+}
+#shop #fit-list #fit table #fit-desc {
+  text-align: left;
+  padding-left: 20px;
+  width: 25%;
+}
+#shop #fit-list #fit table #fit-skills {
+  text-align: right;
+  width: 20%;
+}
+#shop #fit-list #fit table #fit-price {
+  width: 20%;
+}
+#shop #fit-list #fit table #fit-number {
+  width: 10%;
+}
+#shop #fit-list #fit table #fit-add {
+  width: 20%;
+}
+#create #create-form {
+  margin-top: 20px;
+}
+#create #create-form label {
+  margin-top: 20px;
+}
+#create #create-form #create-button {
+  margin-top: 20px;
+}

@@ -1,0 +1,79 @@
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invtype` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `description` longtext NOT NULL, `group_id` integer NULL, `market_group_id` integer NULL, `mass` double precision NULL, `volume` double precision NULL, `capacity` double precision NULL, `portion_size` integer NULL, `base_price` double precision NULL, `is_published` bool NOT NULL, `chance_of_duplicating` double precision NULL)" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invtype` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `description` longtext NOT NULL, `group_id` integer NULL, `market_group_id` integer NULL, `mass` double precision NULL, `volume` double precision NULL, `capacity` double precision NULL, `portion_size` integer NULL, `base_price` double precision NULL, `is_published` bool NOT NULL, `chance_of_duplicating` double precision NULL)" with params "[]"
+execute "CREATE TABLE `eve_invmarketgroup` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `description` varchar(300012) NULL, `parent_id` integer NULL, `has_items` bool NOT NULL, `icon_id` integer NULL)" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invmarketgroup` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `description` varchar(300012) NULL, `parent_id` integer NULL, `has_items` bool NOT NULL, `icon_id` integer NULL)" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invmarketgroup` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `description` varchar(300012) NULL, `parent_id` integer NULL, `has_items` bool NOT NULL, `icon_id` integer NULL)" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invmarketgroup` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `description` longtext NULL, `parent_id` integer NULL, `has_items` bool NOT NULL, `icon_id` integer NULL)" with params "[]"
+execute "ALTER TABLE `eve_invmarketgroup` ADD CONSTRAINT `parent_id_refs_id_c90bc8b6` FOREIGN KEY (`parent_id`) REFERENCES `eve_invmarketgroup` (`id`);" with params "[]"
+execute "CREATE INDEX `eve_invmarketgroup_410d0aac` ON `eve_invmarketgroup` (`parent_id`);" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invcategory` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `description` varchar(255) NOT NULL, `is_published` bool NOT NULL, `icon_id` integer NULL)" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invgroup` (`id` integer NOT NULL PRIMARY KEY, `category_id` integer NULL, `name` varchar(150) NOT NULL, `description` longtext NOT NULL, `icon_id` integer NULL, `use_base_price` bool NOT NULL, `allow_manufacture` bool NOT NULL, `allow_recycle` bool NOT NULL, `allow_anchoring` bool NOT NULL, `is_anchored` bool NOT NULL, `is_fittable_non_singleton` bool NOT NULL, `is_published` bool NOT NULL)" with params "[]"
+execute "ALTER TABLE `eve_invgroup` ADD CONSTRAINT `category_id_refs_id_f9f92f79` FOREIGN KEY (`category_id`) REFERENCES `eve_invcategory` (`id`);" with params "[]"
+execute "CREATE INDEX `eve_invgroup_6f33f001` ON `eve_invgroup` (`category_id`);" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `eve_invtype` (`id` integer NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `description` longtext NOT NULL, `group_id` integer NULL, `market_group_id` integer NULL, `mass` double precision NULL, `volume` double precision NULL, `capacity` double precision NULL, `portion_size` integer NULL, `base_price` double precision NULL, `is_published` bool NOT NULL, `chance_of_duplicating` double precision NULL)" with params "[]"
+execute "ALTER TABLE `eve_invtype` ADD CONSTRAINT `group_id_refs_id_83806e0c` FOREIGN KEY (`group_id`) REFERENCES `eve_invgroup` (`id`);" with params "[]"
+execute "CREATE INDEX `eve_invtype_5f412f9a` ON `eve_invtype` (`group_id`);" with params "[]"
+execute "ALTER TABLE `eve_invtype` ADD CONSTRAINT `market_group_id_refs_id_46529e96` FOREIGN KEY (`market_group_id`) REFERENCES `eve_invmarketgroup` (`id`);" with params "[]"
+execute "CREATE INDEX `eve_invtype_d812e673` ON `eve_invtype` (`market_group_id`);" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `shop_doctrinefit` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `description` longtext NOT NULL, `fit` longtext NOT NULL, `price` numeric(15, 2) NOT NULL, `status` integer NOT NULL, `bought` integer NOT NULL, `creator_id` integer NOT NULL UNIQUE, `created_at` date NOT NULL, `updated_at` date NOT NULL)" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ADD CONSTRAINT `creator_id_refs_id_12bf1442` FOREIGN KEY (`creator_id`) REFERENCES `auth_user` (`id`);" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ADD COLUMN `ship_id` integer NOT NULL DEFAULT 0;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` MODIFY `ship_id` integer NOT NULL;;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ALTER COLUMN `ship_id` DROP DEFAULT;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ADD CONSTRAINT `ship_id_refs_id_98a23383` FOREIGN KEY (`ship_id`) REFERENCES `eve_invtype` (`id`);" with params "[]"
+execute "CREATE INDEX `shop_doctrinefit_02fd923e` ON `shop_doctrinefit` (`ship_id`);" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "
+            SELECT kc.`constraint_name`, kc.`column_name`, kc.`table_name`,
+                kc.`referenced_table_name`, kc.`referenced_column_name`
+            FROM information_schema.key_column_usage AS kc
+            WHERE
+                kc.table_schema = %s
+        " with params "['fwmazon']"
+execute "
+            SELECT c.constraint_name, c.table_name, c.constraint_type
+            FROM information_schema.table_constraints AS c
+            WHERE
+                c.table_schema = %s
+        " with params "['fwmazon']"
+execute "ALTER TABLE `shop_doctrinefit` DROP INDEX `creator_id`" with params "[]"
+execute "
+            SELECT kc.`constraint_name`, kc.`column_name`, kc.`table_name`,
+                kc.`referenced_table_name`, kc.`referenced_column_name`
+            FROM information_schema.key_column_usage AS kc
+            WHERE
+                kc.table_schema = %s
+        " with params "['fwmazon']"
+execute "
+            SELECT c.constraint_name, c.table_name, c.constraint_type
+            FROM information_schema.table_constraints AS c
+            WHERE
+                c.table_schema = %s
+        " with params "['fwmazon']"
+execute "ALTER TABLE `shop_doctrinefit` DROP FOREIGN KEY `creator_id_refs_id_12bf1442`" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` MODIFY `creator_id` integer NOT NULL;;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ALTER COLUMN `creator_id` DROP DEFAULT;" with params "[]"
+execute "ALTER TABLE `shop_doctrinefit` ADD CONSTRAINT `creator_id_refs_id_12bf1442` FOREIGN KEY (`creator_id`) REFERENCES `auth_user` (`id`);" with params "[]"
