@@ -22,6 +22,8 @@ class Character(models.Model):
     """
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=128)
+    #TODO: Integrate this with update_user.py
+    #corporation = models.IntegerField()
     user = models.OneToOneField(User)
 
 
@@ -157,6 +159,7 @@ class InvType(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+        
 
 class ItemPrice(models.Model):
     price = models.DecimalField(max_digits=30, decimal_places=2, default=0.00)
