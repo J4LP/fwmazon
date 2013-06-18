@@ -52,7 +52,7 @@
                         <p class="navbar-text pull-right">Hello {{user.character.name}} ! <a href="/logout" class="navbar-link">Logout</a></p>
                         <ul class="nav pull-right" id="nav-cart">
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{cart.items|length}} articles in the cart<b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span id="cart-items">{{cart.items|length}} articles</span> in the cart<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
                                     <li><a href="http://fweddit.com/auth">Auth</a></li>
@@ -68,6 +68,7 @@
             </div>
         </header>
         <div class="container">
+            <div id="messages"></div>
             {% block content %}{% endblock %}
         </div>
         <footer>

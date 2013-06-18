@@ -2,14 +2,27 @@
 {% load humanize %}
 {% block content %}
     <div id="shop">
-        <h1><i class="icon-shopping-cart"></i> It's shopping time !</h1>
+        <h1><i class="icon-shopping-cart"></i> You have {{cart.items|length}} items in your Shopping Cart</h1>
         <p>Here's how it works, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, aspernatur, quidem labore laudantium incidunt blanditiis soluta ducimus nulla magnam inventore explicabo reprehenderit praesentium repellat. Doloribus, dolorem laudantium animi eveniet cumque.</p>
-
-        <div id="fit-list">
-            {% csrf_token %}
-            <table class="table">
-                {% for fit in fits %}
-                    <tr id="fit">
+        {% csrf_token %}
+        {% if cart.doctrines %}
+            <table id="cart-doctrine-ships" class="table">
+                <tr>
+                    <td colspan="3"><h4><b>Doctrine Ships</b></h4></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>Name and Description</th>
+                    <th>Details</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+                {% for fit in cart.doctrines %}
+                     <tr id="fit">
                         <td id="fit-img">
                             <img src="http://image.eveonline.com/Render/{{fit.ship.id}}_128.png" alt="Talwar">
                         </td>
@@ -17,27 +30,83 @@
                             <h4><a href="#">{{fit.ship.name}}, {{fit.name}}</a></h4>
                             <p>{{fit.description}}</p>
                         </td>
-                        <td id="fit-skills">
+                        <td id="fit-details">
                             <h4>
-                                <span class="label label-info"><a href="#">Can I fly this ?</a></span> 
                                 <span class="label label-success">
                                     <a href="#" id="show-details-modal" data-remote="/shop/details/{{fit.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
                                 </span>
                             </h4>
                         </td>
                         <td id="fit-price">
-                            Price: {{fit.price|intcomma}} ISK HT
+                            {{fit.price|intcomma}} ISK
                         </td>
                         <td id="fit-number">
-                            <input type="number" name="amount" data-fit="{{fit.id}}" value="0" min="0">
+                            <input type="number" name="amount" data-fit="{{fit.id}}" value="{{fit.amount}}" min="0">
                         </td>
-                        <td id="fit-add">
-                            <a href="#" id="add-to-cart" data-fit="{{fit.id}}" class="btn btn-primary">Add</a>
+                        <td id="fit-delete">
+                            <a href="#" id="delete-from-cart" data-fit="{{fit.id}}" class="btn btn-primary">Update</a>
+                            <a href="#" id="delete-from-cart" data-fit="{{fit.id}}" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="3"><h4><b>Modules</b></h4></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="fit">
+                    <td id="fit-img">
+                        <img src="http://image.eveonline.com/Type/14264_64.png" alt="Talwar">
+                    </td>
+                    <td id="fit-desc">
+                        <h4><a href="#">Domination Stasis Webifier</a></h4>
+                        <p>BLABLABLA</p>
+                    </td>
+                    <td id="fit-details">
+                        <h4>
+                            <span class="label label-success">
+                                <a href="#" id="show-details-modal" data-remote="/shop/details/{{fit.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
+                            </span>
+                        </h4>
+                    </td>
+                    <td id="fit-price">
+                        {{10.0|intcomma}} ISK
+                    </td>
+                    <td id="fit-number">
+                        <input type="number" name="amount" data-fit="{{fit.id}}" value="{{fit.amount}}" min="0">
+                    </td>
+                    <td id="fit-delete">
+                        <a href="#" id="delete-from-cart" data-fit="{{fit.id}}" class="btn btn-primary">Update</a>
+                        <a href="#" id="delete-from-cart" data-fit="{{fit.id}}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                <tr id="sub-total">
+                    <td></td>
+                    <td></td>
+                    <td><h4>Subtotal</h4></td>
+                    <td id="sub-total">{{cart.doctrines_price|intcomma}} ISK</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="sub-total">
+                    <td></td>
+                    <td></td>
+                    <td><h4>Shipping</h4></td>
+                    <td id="sub-total">{{15000000|intcomma}} ISK ({{400000.00|intcomma}} m²)</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="sub-total">
+                    <td></td>
+                    <td></td>
+                    <td><h4><b>Total</b></h4></td>
+                    <td id="sub-total"><b>{{9999999999.00|intcomma}} ISK</b></td>
+                    <td></td>
+                    <td><a href="#" class="btn btn-success">Confirm quote</a></td>
+                </tr>
             </table>
-        </div>
+        {% endif %}
     </div>
     
     <div class="modal fade" id="details">

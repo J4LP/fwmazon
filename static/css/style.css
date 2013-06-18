@@ -141,3 +141,45 @@ a.navbar-link {
 #list-fits table #fit-actions {
   width: 20%;
 }
+table#cart-doctrine-ships th {
+  text-align: center;
+}
+table#cart-doctrine-ships tr#fit td {
+  vertical-align: middle;
+}
+table#cart-doctrine-ships tr#fit #fit-img {
+  width: 7%;
+}
+table#cart-doctrine-ships tr#fit #fit-desc {
+  text-align: left;
+  padding-left: 20px;
+  width: 25%;
+}
+table#cart-doctrine-ships tr#fit #fit-details {
+  text-align: center;
+  width: 10%;
+}
+table#cart-doctrine-ships tr#fit #fit-details span a {
+  color: #fff;
+}
+table#cart-doctrine-ships tr#fit #fit-price {
+  text-align: center;
+  width: 20%;
+}
+table#cart-doctrine-ships tr#fit #fit-number {
+  text-align: center;
+  width: 15%;
+}
+table#cart-doctrine-ships tr#fit #fit-number input {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+table#cart-doctrine-ships tr#fit #fit-delete {
+  text-align: center;
+  width: 30%;
+}
+table#cart-doctrine-ships tr#sub-total td {
+  text-align: center;
+  vertical-align: middle;
+}
