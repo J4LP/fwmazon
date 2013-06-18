@@ -19,6 +19,6 @@ class DoctrineFit(models.Model):
     status = models.IntegerField(default=0)
     bought = models.IntegerField(default=0)
     creator = models.ForeignKey(User)
-    created_at = models.DateField(auto_now=False, auto_now_add=True)
-    updated_at = models.DateField(auto_now=True, auto_now_add=False)
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 

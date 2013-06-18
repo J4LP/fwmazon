@@ -1,7 +1,11 @@
 import re
 import json
-
+import requests
+from datetime import datetime
+import xml.etree.ElementTree as ET
+from time import sleep
 from eve.models import InvType
+from eve.models import ItemPrice
 
 class Fit():
     def to_json(self):
@@ -94,3 +98,22 @@ class Fit():
         self.modules = fit['modules']
         self.drones = fit['drones']
         return self
+
+
+def update_price_item(item_id, force=False):
+    try:
+        item_price = ItemPrice.objects.get(pk=item_id)
+    except ItemPrice.DoesNotExist:
+        item_price = ItemPrice(id=item_id)
+    price = 0.0
+    try:
+        r = requests.get('http://api.eve-central.com/api/marketstat?typeid=' + str(item_id))
+        root = ET.fromstring(r.text)
+        all = root[0][0].find('all')
+        price = all.find('median').text
+        sleep(1)
+    except:
+        pass
+    item_price.price = price
+    item_price.save()
+    return price

@@ -22,6 +22,13 @@
                         {% if user.is_authenticated %}
                             <li><a href="/shop">Shop</a></li>
                             <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manager<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url 'create-fit' %}">Add a Doctrine Fit</a></li>
+                                    <li><a href="{% url 'list-fits' %}">List Doctrine Fit</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">J4LP Links<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
@@ -43,6 +50,19 @@
                     </ul>
                     {% if user.is_authenticated %}
                         <p class="navbar-text pull-right">Hello {{user.character.name}} ! <a href="/logout" class="navbar-link">Logout</a></p>
+                        <ul class="nav pull-right" id="nav-cart">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{cart.items|length}} articles in the cart<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
+                                    <li><a href="http://fweddit.com/auth">Auth</a></li>
+                                    <li><a href="http://fweddit.com/forum">Forum</a></li>
+                                    <li><a href="http://fweddit.com/wiki">Wiki</a></li>
+                                    <li><a href="http://fweddit.com/kb">KillBoard</a></li>
+                                    <li><a href="http://fweddit.com/calc">Freight</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     {% endif %}
                 </div>
             </div>

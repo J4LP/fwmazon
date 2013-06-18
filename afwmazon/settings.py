@@ -2,9 +2,13 @@
 import os
 from django.core.urlresolvers import reverse_lazy
 
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+CELERY_RESULT_BACKEND = "amqp"
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-
+INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SOUTH_LOGGING_ON = True
@@ -111,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'shop.middleware.CartMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -126,8 +131,16 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(SITE_ROOT, '../', 'templates'),
 )
-TEMPLATE_CONTEXT_PROCESSOR = (
-    'django.contrib.messages.context_processors.messages'
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'shop.context_processors.cart',
+
 )
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -136,7 +149,9 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'south',
+    'djcelery',
     'home',
     'eve',
     'manager',

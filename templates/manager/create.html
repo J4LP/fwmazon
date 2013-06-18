@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <div id="create">
+        <h1><i class="icon-shopping-cart"></i> Doctrine Fit Creation</h1>
+        <p>Paste the complete fit in the EFT Format, and write its description and Fwmazon will calculate its price and will let you activate it !</p>
+        <form method="post" action="/manager/create" id="create-form">
+            {% csrf_token %}
+            <label for="username">EFT Fit</label>
+            <textarea id="fit" name="fit" placeholder="Paste EFT Fit"></textarea>
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" placeholder="Description">
+            <br>
+            <button type="submit" id="create-button" class="btn btn-primary btn-block">Save fit</button>
+        </form>
+    </div>
+        
+    
+{% endblock %}

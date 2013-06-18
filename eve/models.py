@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
+from decimal import Decimal
+import xml.etree.ElementTree as ET
+from time import sleep
+import requests
+from datetime import datetime, timedelta
 
 class APIKey(models.Model):
     """
@@ -152,3 +157,28 @@ class InvType(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
+class ItemPrice(models.Model):
+    price = models.DecimalField(max_digits=30, decimal_places=2, default=0.00)
+    item = models.ForeignKey(InvType, related_name='price')
+    expires = models.DateTimeField()
+
+    def update_price(self, force=False):
+        if self.expires is None or self.expires < timezone.now() or force is True:
+            price = 0.0
+            try:
+                r = requests.get('http://api.eve-central.com/api/marketstat?typeid=' + str(self.item.id) + '&usesystem=30000142')
+                root = ET.fromstring(r.text)
+                all = root[0][0].find('all')
+                price = all.find('avg').text
+                sleep(1)
+            except:
+                pass
+            self.price = Decimal(price)
+            self.save()
+        return
+
+    def save(self, *args, **kwargs):
+        d = timedelta(days=1)
+        self.expires = timezone.now() + d
+        super(ItemPrice, self).save()

@@ -67,32 +67,38 @@ a.navbar-link {
 #login #login-form #login-button {
   margin-top: 20px;
 }
-#shop #fit-list #fit table {
+#shop #fit-list table {
   margin-top: 20px;
 }
-#shop #fit-list #fit table td {
+#shop #fit-list table td {
   text-align: center;
   vertical-align: middle;
 }
-#shop #fit-list #fit table #fit-img {
+#shop #fit-list table #fit-img {
   width: 7%;
 }
-#shop #fit-list #fit table #fit-desc {
+#shop #fit-list table img {
+  height: 60px;
+}
+#shop #fit-list table #fit-desc {
   text-align: left;
   padding-left: 20px;
   width: 25%;
 }
-#shop #fit-list #fit table #fit-skills {
+#shop #fit-list table #fit-skills {
   text-align: right;
   width: 20%;
 }
-#shop #fit-list #fit table #fit-price {
+#shop #fit-list table #fit-skills span a {
+  color: #fff;
+}
+#shop #fit-list table #fit-price {
   width: 20%;
 }
-#shop #fit-list #fit table #fit-number {
-  width: 10%;
+#shop #fit-list table #fit-number {
+  width: 20%;
 }
-#shop #fit-list #fit table #fit-add {
+#shop #fit-list table #fit-add {
   width: 20%;
 }
 #create #create-form {
@@ -103,4 +109,35 @@ a.navbar-link {
 }
 #create #create-form #create-button {
   margin-top: 20px;
+}
+#list-fits table {
+  margin-top: 20px;
+}
+#list-fits table td {
+  text-align: center;
+  vertical-align: middle;
+}
+#list-fits table #fit-img {
+  width: 7%;
+}
+#list-fits table #fit-desc {
+  text-align: left;
+  padding-left: 20px;
+  width: 25%;
+}
+#list-fits table #fit-info {
+  text-align: left;
+  width: 25%;
+}
+#list-fits table #fit-info ul {
+  margin: 0;
+}
+#list-fits table #fit-price {
+  width: 20%;
+}
+#list-fits table #fit-number {
+  width: 20%;
+}
+#list-fits table #fit-actions {
+  width: 20%;
 }

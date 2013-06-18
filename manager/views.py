@@ -18,6 +18,8 @@ def create(req):
             except:
                 messages.error(req, 'Parsing error, make sure the fit is in EFT format')
                 return render_to_response('home/create.html', context_instance=RequestContext(req))
+            doctrine.name = fit.fit_name
+            doctrine.description = form.cleaned_data['description']
             doctrine.ship = fit.ship
             doctrine.fit = fit.to_json()
             doctrine.status = 2 # Calculating price
@@ -28,4 +30,8 @@ def create(req):
 
     else:
         form = FitForm()
-    return render_to_response('home/create.html', {'form': form}, context_instance=RequestContext(req))
+    return render_to_response('manager/create.html', {'form': form}, context_instance=RequestContext(req))
+
+def list_fits(req):
+    fits = DoctrineFit.objects.all()
+    return render_to_response('manager/list_fits.html', {'fits': fits}, context_instance=RequestContext(req))

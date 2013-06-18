@@ -1,0 +1,46 @@
+{% load humanize %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tr>
+        <td>{{fit.fit.ship.ship_name}}</td>
+        <td>1</td>
+        <td>{{fit.ship.price.get.price|intcomma}}</td>
+    </tr>
+    <tr>
+        <td><b>Modules</b></td>
+        <td></td>
+        <td></td>
+    </tr>
+    {% for module in modules %}
+        <tr>
+            <td>{{module.name}}</td>
+            <td>1</td>
+            <td>{{module.price.get.price|intcomma}}</td>
+        </tr>
+    {% endfor %}
+    {% if drones %}
+        <tr>
+            <td><b>Drones</b></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% for drone in drones %}
+            <tr>
+                <td>{{drone.item.name}}</td>
+                <td>{{drone.amount}}</td>
+                <td>{{drone.item.price.get.price|intcomma}}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    <tr>
+        <td><b>Total</b></td>
+        <td></td>
+        <td>{{fit.price|intcomma}}</td>
+    </tr>
+</table>

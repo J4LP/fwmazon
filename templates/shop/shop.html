@@ -1,0 +1,72 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="shop">
+        <h1><i class="icon-shopping-cart"></i> It's shopping time !</h1>
+        <p>Here's how it works, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, aspernatur, quidem labore laudantium incidunt blanditiis soluta ducimus nulla magnam inventore explicabo reprehenderit praesentium repellat. Doloribus, dolorem laudantium animi eveniet cumque.</p>
+
+        <div id="fit-list">
+            <table class="table">
+                {% for fit in fits %}
+                    <tr id="fit">
+                        <td id="fit-img">
+                            <img src="http://image.eveonline.com/Render/{{fit.ship.id}}_128.png" alt="Talwar">
+                        </td>
+                        <td id="fit-desc">
+                            <h4><a href="#">{{fit.ship.name}}, {{fit.name}}</a></h4>
+                            <p>{{fit.description}}</p>
+                        </td>
+                        <td id="fit-skills">
+                            <h4>
+                                <span class="label label-info"><a href="#">Can I fly this ?</a></span> 
+                                <span class="label label-success">
+                                    <a href="#" id="show-details-modal" data-remote="/shop/details/{{fit.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
+                                </span>
+                            </h4>
+                        </td>
+                        <td id="fit-price">
+                            Price: {{fit.price|intcomma}} ISK HT
+                        </td>
+                        <td id="fit-number">
+                            <input type="number" value="0" min="0">
+                        </td>
+                        <td id="fit-add">
+                            <a href="#" class="btn btn-primary">Add</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="details">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Fit Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('body').on('click', 'a#show-details-modal', function(e) {
+            url = $(this).data('remote')
+            modal = $('div.modal#details')
+            modal_data = modal.data()
+            if (modal_data['bs.modal'] != undefined) {
+                if (modal_data['bs.modal'].options.remote != url) {
+                    modal.removeData();
+                }
+            }            
+        });
+    </script>
+  
+{% endblock %}

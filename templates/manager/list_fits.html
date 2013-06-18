@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <div id="list-fits">
+        <a href="{% url 'create-fit' %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> Add a new Fit</a>
+        <h1><i class="icon-cog"></i> Doctrine Fit Management</h1>
+        <p>Activate, deactivate, look at the stats, modify the description, it's all possible with Fwmazon !</p>
+        <table class="table">
+            {% for fit in fits %}
+                <tr id="fit">
+                    <td id="fit-img">
+                        <img src="http://image.eveonline.com/Render/{{fit.ship.id}}_128.png" alt="Talwar">
+                    </td>
+                    <td id="fit-desc">
+                        <h4><a href="#">{{fit.ship.name}}, {{fit.name}}</a></h4>
+                        <p>{{fit.description}}</p>
+                    </td>
+                    <td id="fit-info">
+                        <ul>
+                            <li>
+                                <small>Added by {{fit.creator.character.name}} on <abbr title="{{fit.created_at|date:"r"}}">{{fit.created_at|date:"DATE_FORMAT"}}</abbr></small>
+                            </li>
+                            <li>
+                                <small>Price updated on <abbr title="{{fit.updated_at|date:"r"}}">{{fit.updated_at|date:"DATE_FORMAT"}}</small>
+                            </li>
+                        </ul>
+                    </td>
+                    <td id="fit-price">
+                        Price: {{fit.price}} ISK HT
+                    </td>
+                    <td id="fit-number">
+                        Bought {{fit.bought}} times
+                    </td>
+                    <td id="fit-actions">
+                        {% if fit.status == 0 %}
+                            <a href="#" class="btn btn-success">Activate</a>
+                        {% elif fit.status == 1 %}
+                            <a href="#" class="btn btn-warning">Deactivate</a>
+                        {% else %}
+                            <a href="#" class="btn btn-info" disabled="disabled">Updating...</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+        
+    
+{% endblock %}
