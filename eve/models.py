@@ -17,6 +17,8 @@ class Character(models.Model):
     """
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=128)
+    #TODO: Integrate this with update_user.py
+    #corporation = models.IntegerField()
     user = models.OneToOneField(User)
 
 
