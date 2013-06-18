@@ -10,6 +10,7 @@ Its goal is to provide a unified web interface for ordering doctrine ships and s
 To get started:
 * Clone the repository
 * pip install -r requirements.txt
+* Modify the afwmazon/settings.py
 * ./manage.py migrate --all
 * And some more stuff not included yet (Eve dbs for example, will put it in fixtures later)
 
