@@ -3,7 +3,7 @@ from django.template import RequestContext
 from shop.models import DoctrineFit
 from eve.models import InvType
 from django.http import HttpResponse
-from cart import CartForm
+from cart import CartForm, Cart
 import json
 
 def shop(req):
@@ -20,7 +20,6 @@ def shop_details(req, fit_id):
 
 def cart_view(req):
     cart = req.cart
-    print(cart.length)
     cart.populate()
     return render_to_response('shop/cart.html', {'cart': cart}, context_instance=RequestContext(req))
 
