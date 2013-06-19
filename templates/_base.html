@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="/static/css/style.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/static/js/jquery.cookie.js"></script>
+        <script src="/static/js/cart.js"></script>
     </head>
     <body>
         <header>
@@ -51,17 +53,7 @@
                     {% if user.is_authenticated %}
                         <p class="navbar-text pull-right">Hello {{user.character.name}} ! <a href="/logout" class="navbar-link">Logout</a></p>
                         <ul class="nav pull-right" id="nav-cart">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span id="cart-items">{{cart.items|length}} articles</span> in the cart<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="http://reddit.com/r/fweddit">Subreddit</a></li>
-                                    <li><a href="http://fweddit.com/auth">Auth</a></li>
-                                    <li><a href="http://fweddit.com/forum">Forum</a></li>
-                                    <li><a href="http://fweddit.com/wiki">Wiki</a></li>
-                                    <li><a href="http://fweddit.com/kb">KillBoard</a></li>
-                                    <li><a href="http://fweddit.com/calc">Freight</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="{% url "cart" %}">{{cart.length}} articles in the cart. Checkout</a></li>
                         </ul>
                     {% endif %}
                 </div>

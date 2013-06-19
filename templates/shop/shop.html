@@ -4,9 +4,10 @@
     <div id="shop">
         <h1><i class="icon-shopping-cart"></i> It's shopping time !</h1>
         <p>Here's how it works, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, aspernatur, quidem labore laudantium incidunt blanditiis soluta ducimus nulla magnam inventore explicabo reprehenderit praesentium repellat. Doloribus, dolorem laudantium animi eveniet cumque.</p>
-
+        
         <div id="fit-list">
-            {% csrf_token %}
+            <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Finished Shopping ?</a>
+            <br>
             <table class="table">
                 {% for fit in fits %}
                     <tr id="fit">
@@ -29,14 +30,15 @@
                             Price: {{fit.price|intcomma}} ISK HT
                         </td>
                         <td id="fit-number">
-                            <input type="number" name="amount" data-fit="{{fit.id}}" value="0" min="0">
+                            <input type="number" name="amount" data-id="{{fit.id}}" data-type="ship" value="0" min="0">
                         </td>
                         <td id="fit-add">
-                            <a href="#" id="add-to-cart" data-fit="{{fit.id}}" class="btn btn-primary">Add</a>
+                            <a href="#" id="add-to-cart" data-id="{{fit.id}}" data-type="ship" class="btn btn-primary"><i class="icon-plus"></i> Add</a>
                         </td>
                     </tr>
                 {% endfor %}
-            </table>
+            </table>            
+            <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Finished Shopping ?</a>
         </div>
     </div>
     
@@ -56,62 +58,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        csrftoken = $('input[name=csrfmiddlewaretoken]').val()
-        $('body').on('click', 'a#show-details-modal', function(e) {
-            url = $(this).data('remote')
-            modal = $('div.modal#details')
-            modal_data = modal.data()
-            if (modal_data['bs.modal'] != undefined) {
-                if (modal_data['bs.modal'].options.remote != url) {
-                    modal.removeData();
-                }
-            }            
-        });
-        $('body').on('click', 'a#add-to-cart', function(e) {
-            e.preventDefault()
-            fit_id = $(this).data('fit')
-            amount = $('input[data-fit=' + fit_id + ']').val()
-            if (amount == 0 || amount < 0)
-                return
-            req = $.ajax({
-                url: '/shop/cart/add',
-                type: 'POST',
-                data: {'doctrine_id': fit_id, 'doctrine_amount': amount}
-            })
-            req.done(function(data) {
-                if (data['items'].length == 1)
-                    $('span#cart-items').text(data['items'].length + ' article')
-                else
-                    $('span#cart-items').text(data['items'].length + ' articles')
-            })
-            req.error(function(data) {
-                error('An error occured while updating the shopping cart, please try again')
-            })
-        });
-        function csrfSafeMethod(method) {
-            // these HTTP methods do not require CSRF protection
-            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-        }
-        $.ajaxSetup({
-            crossDomain: false,
-            beforeSend: function(xhr, settings) {
-                if (!csrfSafeMethod(settings.type)) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                }
-            }
-        });
-        function error(message) {
-            id = Math.floor(Math.random() * 100)
-            $('#messages').append('<div class="alert alert-danger" id="message-' + id + '">' + message + '</div>');
-            t = setTimeout(function() {
-                hide_message(id)
-            }, 5000)
-        }
-        function hide_message(id) {
-            $('#messages #message-' + id).remove()
-        }
-    </script>
   
 {% endblock %}

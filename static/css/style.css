@@ -36,6 +36,9 @@ a.navbar-brand {
 a.navbar-link {
   color: #2980b9 !important;
 }
+#nav-cart {
+  margin-right: 10px;
+}
 #brand {
   text-align: center;
 }
