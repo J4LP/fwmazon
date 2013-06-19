@@ -73,7 +73,7 @@
             e.preventDefault()
             fit_id = $(this).data('fit')
             amount = $('input[data-fit=' + fit_id + ']').val()
-            if (amout == 0 || amount < 0)
+            if (amount == 0 || amount < 0)
                 return
             req = $.ajax({
                 url: '/shop/cart/add',
