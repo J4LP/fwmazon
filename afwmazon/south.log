@@ -246,3 +246,6 @@ execute "ALTER TABLE `eve_itemprice` DROP FOREIGN KEY `item_type_id_refs_id_3a51
 execute "DESCRIBE `eve_itemprice`" with params "[]"
 execute "ALTER TABLE `eve_itemprice` CHANGE COLUMN `item_type_id` `item_id` int(11) NOT NULL   ;" with params "[]"
 execute "ALTER TABLE `eve_itemprice` ADD CONSTRAINT `item_id_refs_id_3a517e65` FOREIGN KEY (`item_id`) REFERENCES `eve_invtype` (`id`);" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "SET FOREIGN_KEY_CHECKS=0;" with params "[]"
+execute "CREATE TABLE `checkout_shippingdestination` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `shipping_cost` numeric(15, 2) NOT NULL, `active` bool NOT NULL, `delay` integer NOT NULL)" with params "[]"

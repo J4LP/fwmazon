@@ -186,3 +186,15 @@ table#cart-doctrine-ships tr#sub-total td {
   text-align: center;
   vertical-align: middle;
 }
+#checkout-options #shipping-panel {
+  margin-top: 20px;
+}
+#checkout-options #shipping-panel select {
+  height: 40px;
+}
+#checkout-options #shipping-panel p#total-shipping {
+  margin-top: 10px;
+}
+#checkout-options #review-panel div.panel-footer {
+  text-align: right;
+}

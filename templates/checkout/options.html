@@ -1,0 +1,73 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="checkout-options">
+        <div class="row">
+            <div class="col col-lg-12">
+                <ul class="breadcrumb">
+                    <li><a href="#">Fwmazon</a></li>
+                    <li><a href="#">Cart</a></li>
+                    <li class="active">Options</li>
+                </ul>
+                <h1><i class="icon-shopping-cart"></i> Shipping and Options</h1>
+                <div class="panel" id="shipping-panel">
+                    <div class="panel-heading"><i class="icon-map-marker"></i> Shipping</div>
+                    <h5><strong>Summer 2013 Important Informations :</strong></h5>
+                    <p>As you are probably aware, blablabla Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, ab, consequatur, est, cumque officiis quod vel distinctio cupiditate voluptatum soluta ullam facilis quasi porro tenetur sapiente voluptatem laudantium dolorum molestiae.</p>
+                    <form action="">
+                        <select id="shipping">
+                            {% for destination in destinations %}
+                                <option value="{{destination.id}}" data-cost="{{destination.shipping_cost}}" data-delay="{{destination.delay}}">{{destination.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                    <p id="total-shipping">
+                        Total Volume: <span id="js-volume" data-volume="123456">{{123456|intcomma}}</span> m<sup>3</sup><br/>
+                        Total Shipping Cost: <span id="js-shipping-cost"><span class="text-muted">Calculating...</span></span> ISK</p>
+                </div>
+                <div class="panel" id="fitting-panel">
+                    <div class="panel-heading"><i class="icon-wrench"></i> Fitting</div>
+                    <p>Fwmazon's ships come unfitted but they can be fitted, ready to be blown up on reception for a small price !</p>
+                    <form action="">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="fitting" name="fitting" value="fitting">
+                                Fit my ships (<span id="js-fitting-price" data-price="100000">{{1000000|intcomma}}</span> ISK)
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel" id="review-panel">
+                    <div class="panel-heading"><i class="icon-money"></i> Review and Pay</div>
+                    <table class="table">
+                        <tr>
+                            <td>Sub Total:</td>
+                            <td>{{1241421|intcomma}} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping:</td>
+                            <td><span id="js-review-shopping">{{2141241|intcomma}}</span> ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Options:</td>
+                            <td><span id="js-options-cost">{{0|intcomma}}</span> ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Alliance Tax ( 5% ):</td>
+                            <td>{{53157|intcomma}} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Amount to Pay:</td>
+                            <td><b>{{99999999999999|intcomma}} ISK</b></td>
+                        </tr>
+                    </table>
+                    <div class="panel-footer">
+                        I agree with Fwmazon Terms of Service <a href="#" class="btn btn-primary">Pay</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/checkout.js"></script>
+{% endblock %}
