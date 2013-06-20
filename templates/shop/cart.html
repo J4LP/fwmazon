@@ -2,7 +2,7 @@
 {% load humanize %}
 {% block content %}
     <div id="shop">
-        <h1><i class="icon-shopping-cart"></i> You have {{cart.length}} items in your Shopping Cart</h1>
+        <h1><i class="icon-shopping-cart"></i> You have {{cart.length}} item{{cart.length|pluralize}} in your Shopping Cart</h1>
         <p>Here's how it works, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, aspernatur, quidem labore laudantium incidunt blanditiis soluta ducimus nulla magnam inventore explicabo reprehenderit praesentium repellat. Doloribus, dolorem laudantium animi eveniet cumque.</p>
         {% if cart.doctrines %}
             <table id="cart-doctrine-ships" class="table">
@@ -83,26 +83,10 @@
                 <tr id="sub-total">
                     <td></td>
                     <td></td>
-                    <td><h4>Subtotal</h4></td>
+                    <td><h4><b>Total</b></h4></td>
                     <td id="sub-total">{{cart.doctrines_price|intcomma}} ISK</td>
                     <td></td>
-                    <td></td>
-                </tr>
-                <tr id="sub-total">
-                    <td></td>
-                    <td></td>
-                    <td><h4>Shipping</h4></td>
-                    <td id="sub-total">{{15000000|intcomma}} ISK ({{400000.00|intcomma}} m²)</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr id="sub-total">
-                    <td></td>
-                    <td></td>
-                    <td><h4><b>Total</b></h4></td>
-                    <td id="sub-total"><b>{{9999999999.00|intcomma}} ISK</b></td>
-                    <td></td>
-                    <td><a href="#" class="btn btn-success">Confirm quote</a></td>
+                    <td><a href="#" class="btn btn-success btn-block">Checkout</a></td>
                 </tr>
             </table>
         {% endif %}
