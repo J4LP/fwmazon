@@ -12,11 +12,7 @@ class Shipping
         $('body').on('change', 'select#shipping', @update_shipping)
 
     update_shipping: (e) =>
-        if e
-            e.preventDefault()
-            $option = $(e.currentTarget).children(':selected')
-        else
-            $option = $('select#shipping').children(':selected')
+        $option = $('select#shipping').children(':selected')
         cost = parseFloat($option.data('cost'))
         delay = parseFloat($option.data('delay'))
         total_shipping = (cost * @_volume)
@@ -41,16 +37,33 @@ class CostUpdater
         $('body').on('change', 'input#fitting', @update_price)
 
     update_price: =>
-        shipping = $('span#js-shipping-cost').data('cost')
-        $('span#js-review-shopping').text(@to_comma(shipping))
+        @collect_prices()
+        $('span#js-review-shipping').text(@to_comma(@prices.shipping))
+        $('span#js-review-options').text(@to_comma(@prices.options))
+        $('span#js-review-tax').text(@to_comma(@prices.tax))
+        $('span#js-review-total').text(@to_comma(@prices.total))
+
+    collect_prices: ->
+        @prices.sub_total = parseFloat($('span#js-review-subtotal').data('subtotal'))
+        @prices.shipping = parseFloat($('span#js-shipping-cost').data('cost'))
         if $('input#fitting').prop('checked')
-            $('span#js-options-cost').text(@to_comma(@fitting))
+            @prices.options = @fitting
         else
-            $('span#js-options-cost').text('0')
+            @prices.options = 0.0
+        @prices.tax = (@prices.sub_total + @prices.shipping + @prices.options) * 0.05
+        @prices.total = @prices.sub_total + @prices.shipping + @prices.options + @prices.tax
+
+    prices: {
+        'sub_total': 0.0
+        'shipping': 0.0
+        'options': 0.0
+        'tax': 0.0
+        'total': 0.0
+    }
 
     to_comma: (int) ->
         return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 $(document).on 'ready', ->
-    window.cost_update = new CostUpdater()
+    window.cost_updater = new CostUpdater()
     window.shipping = new Shipping()

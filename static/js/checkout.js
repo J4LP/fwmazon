@@ -18,12 +18,7 @@ Shipping = (function() {
 
   Shipping.prototype.update_shipping = function(e) {
     var $option, cost, delay, total_shipping;
-    if (e) {
-      e.preventDefault();
-      $option = $(e.currentTarget).children(':selected');
-    } else {
-      $option = $('select#shipping').children(':selected');
-    }
+    $option = $('select#shipping').children(':selected');
     cost = parseFloat($option.data('cost'));
     delay = parseFloat($option.data('delay'));
     total_shipping = cost * this._volume;
@@ -57,14 +52,31 @@ CostUpdater = (function() {
   }
 
   CostUpdater.prototype.update_price = function() {
-    var shipping;
-    shipping = $('span#js-shipping-cost').data('cost');
-    $('span#js-review-shopping').text(this.to_comma(shipping));
+    this.collect_prices();
+    $('span#js-review-shipping').text(this.to_comma(this.prices.shipping));
+    $('span#js-review-options').text(this.to_comma(this.prices.options));
+    $('span#js-review-tax').text(this.to_comma(this.prices.tax));
+    return $('span#js-review-total').text(this.to_comma(this.prices.total));
+  };
+
+  CostUpdater.prototype.collect_prices = function() {
+    this.prices.sub_total = parseFloat($('span#js-review-subtotal').data('subtotal'));
+    this.prices.shipping = parseFloat($('span#js-shipping-cost').data('cost'));
     if ($('input#fitting').prop('checked')) {
-      return $('span#js-options-cost').text(this.to_comma(this.fitting));
+      this.prices.options = this.fitting;
     } else {
-      return $('span#js-options-cost').text('0');
+      this.prices.options = 0.0;
     }
+    this.prices.tax = (this.prices.sub_total + this.prices.shipping + this.prices.options) * 0.05;
+    return this.prices.total = this.prices.sub_total + this.prices.shipping + this.prices.options + this.prices.tax;
+  };
+
+  CostUpdater.prototype.prices = {
+    'sub_total': 0.0,
+    'shipping': 0.0,
+    'options': 0.0,
+    'tax': 0.0,
+    'total': 0.0
   };
 
   CostUpdater.prototype.to_comma = function(int) {
@@ -76,6 +88,6 @@ CostUpdater = (function() {
 })();
 
 $(document).on('ready', function() {
-  window.cost_update = new CostUpdater();
+  window.cost_updater = new CostUpdater();
   return window.shipping = new Shipping();
 });

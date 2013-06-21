@@ -42,23 +42,23 @@
                     <table class="table">
                         <tr>
                             <td>Sub Total:</td>
-                            <td>{{1241421|intcomma}} ISK</td>
+                            <td><span id="js-review-subtotal" data-subtotal="{{cart.doctrines_price}}"></span>{{cart.doctrines_price|intcomma}} ISK</td>
                         </tr>
                         <tr>
                             <td>Shipping:</td>
-                            <td><span id="js-review-shopping">{{2141241|intcomma}}</span> ISK</td>
+                            <td><span id="js-review-shipping">{{2141241|intcomma}}</span> ISK</td>
                         </tr>
                         <tr>
                             <td>Options:</td>
-                            <td><span id="js-options-cost">{{0|intcomma}}</span> ISK</td>
+                            <td><span id="js-review-options">{{0|intcomma}}</span> ISK</td>
                         </tr>
                         <tr>
                             <td>Alliance Tax ( 5% ):</td>
-                            <td>{{53157|intcomma}} ISK</td>
+                            <td><span id="js-review-tax">{{53157|intcomma}}</span> ISK</td>
                         </tr>
                         <tr>
                             <td>Amount to Pay:</td>
-                            <td><b>{{99999999999999|intcomma}} ISK</b></td>
+                            <td><b><span id="js-review-total">{{99999999999999|intcomma}}</span> ISK</b></td>
                         </tr>
                     </table>
                     <div class="panel-footer">
