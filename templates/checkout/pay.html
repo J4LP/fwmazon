@@ -1,0 +1,68 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="checkout-payment">
+        <div class="row">
+            <div class="col col-lg-12">
+                <ul class="breadcrumb">
+                    <li><a href="#">Fwmazon</a></li>
+                    <li><a href="#">Cart</a></li>
+                    <li><a href="#" class="text-muted">Checkout</a></li>
+                    <li class="active">Payment</li>
+                </ul>
+                <h1><i class="icon-money"></i> Payment</h1>
+                <div class="panel" id="payment-panel">
+                    <div class="panel-heading">Payment Details</div>
+                    <table class="table">
+                        <tr>
+                            <td>Sub Total:</td>
+                            <td>{{order.elements_price|intcomma}} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping:</td>
+                            <td>{{order.shipping_fee|intcomma}} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Options:</td>
+                            <td>{% if order.to_be_fitted %}{{10000|intcomma}}{% else %}0{% endif %} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Alliance Tax ( 5% ):</td>
+                            <td>{{order.tax|intcomma}} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Amount to Pay:</td>
+                            <td><b>{{order.total_price|intcomma}} ISK</b></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel" id="payment-help-panel">
+                    <div class="panel-heading">How to Pay <a href="#" class="pull-right">Help</a></div>
+                    <div class="row">
+                        <div class="col col-lg-4">
+                            <p>Open up your People & Place window, search for:</p>
+                            <input type="text" value="FWEDDIT WHATEVER HOLDING CORP" disabled>
+                            <small>Protip: If you're ordering through the Eve Online Browser, click <a href="#payment-help-panel" onclick="CCPEVE.showInfo(2, 1000115)">here</a> to open the information window</small>
+                        </div>
+                        <div class="col col-lg-4">
+                            <p>Right click and Send Money, put the following amount:</p>
+                            <input type="text" value="{{order.total_price}}" disabled>
+                            <small>Copy and paste so you don't make any amount errors</small>
+                        </div>
+                        <div class="col col-lg-4">
+                            <p>Put this authentication key in the reason box:</p>                            
+                            <input type="text" value="RANDOMSHIT" disabled>
+                            <small>This will be picked up by the system and act as proof of payment</small>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <h4 class="text-danger">Any transaction without the proper order key or with the wrong amount will be considered as donations and will not be refunded</h4>
+                    </div>
+                    <div class="panel-footer" style="text-align: right">                        
+                        <a href="#" class="btn btn-success">IM DONE HERE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

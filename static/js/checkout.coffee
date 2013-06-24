@@ -8,7 +8,6 @@ class Shipping
         @update_shipping()
     
     init_events: ->
-        #$('body').on('click', 'a#add-to-cart', @add)
         $('body').on('change', 'select#shipping', @update_shipping)
 
     update_shipping: (e) =>
@@ -16,7 +15,7 @@ class Shipping
         cost = parseFloat($option.data('cost'))
         delay = parseFloat($option.data('delay'))
         total_shipping = (cost * @_volume)
-        $('span#js-shipping-cost').text(total_shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).data('cost', total_shipping)
+        $('span#js-shipping-cost').text(to_comma(total_shipping)).data('cost', total_shipping)
         $('body').trigger('cost_update')
 
 window.show_error = (message) ->
@@ -29,6 +28,8 @@ window.show_error = (message) ->
 window.hide_message = (id) ->
     $("#messages #message-#{id}").remove()
 
+window.to_comma = (int) ->
+        return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 class CostUpdater
     constructor: ->
@@ -38,10 +39,10 @@ class CostUpdater
 
     update_price: =>
         @collect_prices()
-        $('span#js-review-shipping').text(@to_comma(@prices.shipping))
-        $('span#js-review-options').text(@to_comma(@prices.options))
-        $('span#js-review-tax').text(@to_comma(@prices.tax))
-        $('span#js-review-total').text(@to_comma(@prices.total))
+        $('span#js-review-shipping').text(to_comma(@prices.shipping))
+        $('span#js-review-options').text(to_comma(@prices.options))
+        $('span#js-review-tax').text(to_comma(@prices.tax))
+        $('span#js-review-total').text(to_comma(@prices.total))
 
     collect_prices: ->
         @prices.sub_total = parseFloat($('span#js-review-subtotal').data('subtotal'))
@@ -61,8 +62,6 @@ class CostUpdater
         'total': 0.0
     }
 
-    to_comma: (int) ->
-        return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 $(document).on 'ready', ->
     window.cost_updater = new CostUpdater()

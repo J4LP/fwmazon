@@ -22,7 +22,7 @@ Shipping = (function() {
     cost = parseFloat($option.data('cost'));
     delay = parseFloat($option.data('delay'));
     total_shipping = cost * this._volume;
-    $('span#js-shipping-cost').text(total_shipping.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")).data('cost', total_shipping);
+    $('span#js-shipping-cost').text(to_comma(total_shipping)).data('cost', total_shipping);
     return $('body').trigger('cost_update');
   };
 
@@ -43,6 +43,10 @@ window.hide_message = function(id) {
   return $("#messages #message-" + id).remove();
 };
 
+window.to_comma = function(int) {
+  return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 CostUpdater = (function() {
   function CostUpdater() {
     this.update_price = __bind(this.update_price, this);
@@ -53,10 +57,10 @@ CostUpdater = (function() {
 
   CostUpdater.prototype.update_price = function() {
     this.collect_prices();
-    $('span#js-review-shipping').text(this.to_comma(this.prices.shipping));
-    $('span#js-review-options').text(this.to_comma(this.prices.options));
-    $('span#js-review-tax').text(this.to_comma(this.prices.tax));
-    return $('span#js-review-total').text(this.to_comma(this.prices.total));
+    $('span#js-review-shipping').text(to_comma(this.prices.shipping));
+    $('span#js-review-options').text(to_comma(this.prices.options));
+    $('span#js-review-tax').text(to_comma(this.prices.tax));
+    return $('span#js-review-total').text(to_comma(this.prices.total));
   };
 
   CostUpdater.prototype.collect_prices = function() {
@@ -77,10 +81,6 @@ CostUpdater = (function() {
     'options': 0.0,
     'tax': 0.0,
     'total': 0.0
-  };
-
-  CostUpdater.prototype.to_comma = function(int) {
-    return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   return CostUpdater;

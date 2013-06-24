@@ -13,14 +13,14 @@
                 <div class="panel" id="shipping-panel">
                     <div class="panel-heading"><i class="icon-map-marker"></i> Shipping</div>
                     <h5><strong>Summer 2013 Important Informations :</strong></h5>
-                    <p>As you are probably aware, blablabla Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, ab, consequatur, est, cumque officiis quod vel distinctio cupiditate voluptatum soluta ullam facilis quasi porro tenetur sapiente voluptatem laudantium dolorum molestiae.</p>
-                    <form action="">
-                        <select id="shipping">
+                    <p>As you are probably aware, blablabla Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, ab, consequatur, est, cumque officiis quod vel distinctio cupiditate voluptatum soluta ullam facilis quasi porro tenetur sapiente voluptatem laudantium dolorum molestiae.</p>                    
+                    <form action="/checkout/" method="post">
+                        {% csrf_token %}
+                        <select id="shipping" name="shipping">
                             {% for destination in destinations %}
                                 <option value="{{destination.id}}" data-cost="{{destination.shipping_cost}}" data-delay="{{destination.delay}}">{{destination.name}}</option>
                             {% endfor %}
                         </select>
-                    </form>
                     <p id="total-shipping">
                         Total Volume: <span id="js-volume" data-volume="123456">{{123456|intcomma}}</span> m<sup>3</sup><br/>
                         Total Shipping Cost: <span id="js-shipping-cost"><span class="text-muted">Calculating...</span></span> ISK</p>
@@ -28,14 +28,12 @@
                 <div class="panel" id="fitting-panel">
                     <div class="panel-heading"><i class="icon-wrench"></i> Fitting</div>
                     <p>Fwmazon's ships come unfitted but they can be fitted, ready to be blown up on reception for a small price !</p>
-                    <form action="">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="fitting" name="fitting" value="fitting">
-                                Fit my ships (<span id="js-fitting-price" data-price="100000">{{1000000|intcomma}}</span> ISK)
-                            </label>
-                        </div>
-                    </form>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="fitting" name="fitting" value="fitting">
+                            Fit my ships (<span id="js-fitting-price" data-price="100000">{{1000000|intcomma}}</span> ISK)
+                        </label>
+                    </div>
                 </div>
                 <div class="panel" id="review-panel">
                     <div class="panel-heading"><i class="icon-money"></i> Review and Pay</div>
@@ -62,8 +60,9 @@
                         </tr>
                     </table>
                     <div class="panel-footer">
-                        I agree with Fwmazon Terms of Service <a href="#" class="btn btn-primary">Pay</a>
+                        I agree with Fwmazon Terms of Service <button type="submit" class="btn btn-primary">Pay</button>
                     </div>
+                </form>
                 </div>
 
             </div>
