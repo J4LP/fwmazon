@@ -48,25 +48,24 @@ class Cart(object):
         }, default=date_handler)
 
     def add(self, req, item_type, item_id, amount):
-        self.items[item_type][item_id] += amount
+        self.items[item_type][str(item_id)] += amount
         self.save(req)
 
     def update(self, req, item_type, item_id, amount):
         if int(amount) == 0:
-            del(self.items[item_type][item_id])
+            del(self.items[item_type][str(item_id)])
         else:
-            self.items[item_type][item_id] = amount
+            self.items[item_type][str(item_id)] = amount
         self.save(req)
 
     def delete(self, req, item_type, item_id):
-        del(self.items[item_type][item_id])
+        del(self.items[item_type][str(item_id)])
         self.save(req)
 
     def populate(self):
         self.doctrines = []
         self.doctrines_price = 0.0
         for item_id, amount in self.items['ship'].items():
-            print(item_id, amount)
             fit = DoctrineFit.objects.get(pk=item_id)
             fit.amount = amount
             self.doctrines_price += int(fit.amount * fit.price)
