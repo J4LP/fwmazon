@@ -107,3 +107,12 @@ class OrderElement(models.Model):
             return self.invtype
 
     element = property(_get_element)
+
+    objects = QuerySetManager()
+    class QuerySet(models.query.QuerySet):
+
+        def ship(self):
+            return self.filter(element_type="doctrine")
+
+        def item(self):
+            return self.filter(element_type="item")
