@@ -1,7 +1,9 @@
 from fwmazon.views import FwmazonTemplateView
+from django.views.generic.base import View
 from django.shortcuts import redirect
 from checkout.models import Order
 from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy
 
 
 class AccountHomeView(FwmazonTemplateView):
@@ -37,3 +39,18 @@ class AccountOrderDetailView(FwmazonTemplateView):
             return redirect('/')
         context['order'] = order
         return context
+
+
+class AccountOrderCancelView(View):
+    def post(self, request, order_id):
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            messages.error(request, 'Could not find the order.')
+            return redirect('/')
+        if order.buyer != request.user:
+            messages.error(request, 'Security error, are you logged in ?')
+            return redirect('/')
+        order.order_status = 99
+        order.save()
+        return redirect(reverse_lazy('account-orders'))
