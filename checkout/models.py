@@ -9,20 +9,29 @@ WAITING = 0
 PROCESSING = 1
 SHIPPED = 2
 CONTRACTED = 3
-CANCELED = 99
+FINISHED = 4
+CANCELLED = 99
 ORDER_STATUS_CHOICES = (
-    (WAITING, 'WAITING'),
-    (PROCESSING, 'PROCESSING'),
-    (SHIPPED, 'SHIPPED'),
-    (CONTRACTED, 'CONTRACTED'),
-    (CANCELED, 'CANCELED'),
+    (WAITING, 'Waiting'),
+    (PROCESSING, 'Processing'),
+    (SHIPPED, 'Shipped'),
+    (CONTRACTED, 'Contracted'),
+    (FINISHED, 'Finished'),
+    (CANCELLED, 'Cancelled'),
 )
+
+class QuerySetManager(models.Manager):
+    def get_query_set(self):
+        return self.model.QuerySet(self.model)
+    def __getattr__(self, attr, *args):
+        return getattr(self.get_query_set(), attr, *args)
 
 class ShippingDestination(models.Model):
     name = models.CharField(max_length=200)
     shipping_cost = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     active = models.BooleanField(default=False)
     delay = models.IntegerField()
+
 
 class Order(models.Model):
     """
@@ -52,7 +61,7 @@ class Order(models.Model):
         self.buyer = user
         elements = []
         for doctrine in cart.doctrines:
-            elements.append(OrderElement(element_type='doctrine', doctrine_fit=doctrine))
+            elements.append(OrderElement(element_type='doctrine', doctrine_fit=doctrine, amount=doctrine.amount))
             self.elements_price += doctrine.price
             #self.volume += doctrine.volume
         """
@@ -64,8 +73,20 @@ class Order(models.Model):
             e.order = self
             e.save()
         return self
-        
+
     tax = property(_get_tax)
+    objects = QuerySetManager()
+
+    class QuerySet(models.query.QuerySet):
+
+        def current(self):
+            return self.filter(order_status=WAITING)
+
+        def finished(self):
+            return self.filter(order_status=FINISHED)
+
+        def cancelled(self):
+            return self.filter(order_status=CANCELLED)
 
 
 class OrderElement(models.Model):
@@ -77,6 +98,7 @@ class OrderElement(models.Model):
     doctrine_fit = models.ForeignKey(DoctrineFit, null=True, blank=True)
     item = models.ForeignKey(InvType, null=True, blank=True)
     price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
+    amount = models.IntegerField(max_length=5)
 
     def _get_element(self):
         if self.element_type == 'doctrine':
@@ -85,3 +107,12 @@ class OrderElement(models.Model):
             return self.invtype
 
     element = property(_get_element)
+
+    objects = QuerySetManager()
+    class QuerySet(models.query.QuerySet):
+
+        def ship(self):
+            return self.filter(element_type="doctrine")
+
+        def item(self):
+            return self.filter(element_type="item")

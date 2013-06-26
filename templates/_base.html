@@ -22,6 +22,7 @@
                     <a href="/" class="navbar-brand">J4KB <i class="icon-dropbox"></i> Fwmazon</a></a>
                     <ul class="nav">
                         {% if user.is_authenticated %}
+                            <li><a href="{% url "account" %}">Account</a></li>
                             <li><a href="/shop">Shop</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manager<b class="caret"></b></a>

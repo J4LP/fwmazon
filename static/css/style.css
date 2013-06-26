@@ -198,3 +198,6 @@ table#cart-doctrine-ships tr#sub-total td {
 #checkout-options #review-panel div.panel-footer {
   text-align: right;
 }
+#account-orders a#show-details-modal {
+  color: #fff;
+}

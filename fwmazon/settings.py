@@ -11,7 +11,7 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-SOUTH_LOGGING_ON = True
+SOUTH_LOGGING_ON = False
 SOUTH_LOGGING_FILE = os.path.join(os.path.dirname(__file__),"south.log")
 
 ADMINS = (
@@ -120,10 +120,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'afwmazon.urls'
+ROOT_URLCONF = 'fwmazon.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'afwmazon.wsgi.application'
+WSGI_APPLICATION = 'fwmazon.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
