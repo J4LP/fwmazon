@@ -11,7 +11,7 @@ class AccountHomeView(FwmazonTemplateView):
 
     def get_request_context_data(self, request, **kwargs):
         context = super(AccountHomeView, self).get_context_data(**kwargs)
-        context['orders'] = request.user.orders.all()
+        context['orders'] = request.user.orders.all().order_by("-id")[:20]
         return context
 
 
