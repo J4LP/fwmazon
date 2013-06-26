@@ -1,0 +1,90 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="manager-queue">
+        <div class="page-header">
+            <h1>Queue <small>Get in line nerd !</small></h1> 
+        </div>
+        <div class="row">
+            <div class="col col-lg-8">
+                <table class="table">
+                    <tr class="success">
+                        <td>Delivered</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="success">
+                        <td>Delivered</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="success">
+                        <td>Delivered</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="info">
+                        <td>Contracted</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="info">
+                        <td>Shipping</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="info">
+                        <td>Proccessing</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="danger">
+                        <td>Urgent</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Waiting</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Waiting</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Waiting</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Waiting</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Waiting</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col col-lg-4">
+                <p>This is the Queue, if you haven't read the Fwmazon Operations Manual (FOM), do so <a href="#">here</a> before doing anything.</p>
+                <p>This queue updates in real time, no need to refresh the page</p>
+                <p>Click on an order to see its details, you can then choose to accept it or reject it.</p>
+                <p>If you are accepting to process an order, it's an engagement, don't log off and comeback tomorrow.</p>
+                <p>Legend:</p>
+                <ul>
+                    <li><span class="label label-success">Delivered orders</span> Orders that have been fulfilled, they will leave the queue shortly after.</li>
+                    <li><span class="label label-info">Orders en-route</span> Orders that are being fulfilled, their status is updated through the process.</li>
+                    <li><span class="label label-danger">Urgent orders</span> Orders that are prioritized over normal ones, do them ASAP.</li>
+                    <li><span class="label label-warning">Late orders</span> Orders that have been in the queue for too long, prioritize them.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        
+    
+{% endblock %}

@@ -1,37 +1,47 @@
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from manager.forms import FitForm
+from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 
 from shop.models import DoctrineFit
 from manager.utils import Fit
+from django.shortcuts import redirect
 
-def create(req):
-    if req.method == 'POST':
-        form = FitForm(req.POST)
-        if form.is_valid():
-            doctrine = DoctrineFit()
-            fit = Fit()
-            try:
-                fit.import_eft(form.cleaned_data['fit'])
-            except:
-                messages.error(req, 'Parsing error, make sure the fit is in EFT format')
-                return render_to_response('home/create.html', context_instance=RequestContext(req))
-            doctrine.name = fit.fit_name
-            doctrine.description = form.cleaned_data['description']
-            doctrine.ship = fit.ship
-            doctrine.fit = fit.to_json()
-            doctrine.status = 2 # Calculating price
-            doctrine.creator = req.user
-            doctrine.save()
-            messages.success(req, 'The fit "%s" has been added !' % doctrine.name)
-            return redirect(reverse_lazy('shop'))
 
-    else:
-        form = FitForm()
-    return render_to_response('manager/create.html', {'form': form}, context_instance=RequestContext(req))
+class ManagerFitCreation(FormView):
+    template_name = 'manager/create.html'
+    form_class = FitForm
+    success_url = reverse_lazy('manager-list-fits')
 
-def list_fits(req):
-    fits = DoctrineFit.objects.all()
-    return render_to_response('manager/list_fits.html', {'fits': fits}, context_instance=RequestContext(req))
+    def form_valid(self, form):
+        fit = Fit()
+        try:
+            fit.import_eft(form.cleaned_data['fit'])
+        except:
+            messages.error(self.request, 'Parsing error, make sure the fit is in EFT format')
+            return redirect(reverse_lazy('manager-create-fit'))
+
+        doctrine = DoctrineFit(
+            name=fit.fit_name,
+            description=form.cleaned_data['description'],
+            ship=fit.ship,
+            fit=fit.to_json(),
+            status=2,
+            creator=self.request.user,
+        ).save()
+        messages.success(self.request, 'The fit "%s" has been added !' % doctrine.name)
+        return super(ManagerFitCreation, self).form_valid(form)
+
+class ManagerFitList(TemplateView):
+    template_name = 'manager/list_fits.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerFitList, self).get_context_data(**kwargs)
+        context['fits'] = DoctrineFit.objects.all()
+        return context
+
+
+class ManagerQueue(TemplateView):
+    template_name = 'manager/queue.html'
+    
