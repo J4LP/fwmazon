@@ -3,7 +3,7 @@
     <div class="row col col-lg-12">
         <ul class="nav nav-pills">
             <li class="active"><a href="{% url "account" %}">Home</a></li>
-            <li><a href="{% url "account-orders" %}">Orders <span class="badge">1</span></a></li>
+            <li><a href="{% url "account-orders" %}">Orders <span class="badge">{{order.current|length}}</span></a></li>
             <li><a href="#">Settings</a></li>
         </ul>
     </div>    
