@@ -7,67 +7,60 @@
         </div>
         <div class="row">
             <div class="col col-lg-8">
+                <h3>Processing Queue</h3>
                 <table class="table">
-                    <tr class="success">
-                        <td>Delivered</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="success">
-                        <td>Delivered</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="success">
-                        <td>Delivered</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="info">
-                        <td>Contracted</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="info">
-                        <td>Shipping</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="info">
-                        <td>Proccessing</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr class="danger">
-                        <td>Urgent</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Waiting</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Waiting</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Waiting</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Waiting</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Waiting</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Something</th>
+                            <th>Last update</th>
+                            <th>Destination</th>
+                            <th>Picked up by</th>
+                        </tr>
+                    </thead>
+                    {% for order in delivered_queue %}
+                        <tr class="delivered">
+                            <td>{{order.get_order_status_display}}</td>
+                            <td>Something</td>
+                            <td>
+                                <abbr title="{{order.updated_at|date:"DATETIME_FORMAT"}}">{{order.updated_at|naturaltime}}</abbr>
+                            </td>
+                            <td>{{order.shipping_destination.short_name}}</td>
+                            <td>Vadrin Hegirin</td>
+                        </tr>
+                    {% endfor %}
+                    {% for order in processing_queue %}
+                        <tr class="processing">
+                            <td>{{order.get_order_status_display}}</td>
+                            <td>Something</td>
+                            <td>
+                                <abbr title="{{order.updated_at|date:"DATETIME_FORMAT"}}">{{order.updated_at|naturaltime}}</abbr>
+                            </td>
+                            <td>{{order.shipping_destination.short_name}}</td>
+                            <td>Vadrin Hegirin</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <h3>Waiting Queue</h3>
+                <table class="table">                
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Volume</th>
+                            <th>Price</th>
+                            <th>Destination</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    {% for order in waiting_queue %}
+                        <tr class="{% if order.priority_flag %}urgent{% else %}waiting{% endif %}">
+                            <td>{{order.get_order_status_display}}</td>
+                            <td>{{order.volume}} m<sup>3</sup></td>
+                            <td>{{order.elements_price|intcomma}} ISK</td>
+                            <td>{{order.shipping_destination.short_name}}</td>
+                            <td><a href="/manager/accept/{{order.id}}" class="btn btn-primary btn-small">Accept</a></td>
+                        </tr>
+                    {% endfor %}
                 </table>
             </div>
             <div class="col col-lg-4">

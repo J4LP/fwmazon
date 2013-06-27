@@ -28,6 +28,7 @@ class QuerySetManager(models.Manager):
 
 class ShippingDestination(models.Model):
     name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=64)
     shipping_cost = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     active = models.BooleanField(default=False)
     delay = models.IntegerField()
@@ -38,6 +39,7 @@ class Order(models.Model):
     Order model
     """
     buyer = models.ForeignKey(User, related_name='orders')
+    contractor = models.ForeignKey(User, related_name="orders_contracted", null=True)
     total_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     elements_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     volume = models.FloatField()
@@ -48,6 +50,7 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     paid_date = models.DateTimeField(null=True)
     order_status = models.IntegerField(default=WAITING, choices=ORDER_STATUS_CHOICES)
+    contracted_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 

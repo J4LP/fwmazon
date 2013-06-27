@@ -179,3 +179,19 @@ table#cart-doctrine-ships
 #manager-queue
     .page-header h1
         margin-top 0
+    h3:first-child
+        margin-top 0
+
+    table
+        tr > td
+            vertical-align middle
+            > p
+                margin 5px 0 5px
+        tr.processing > td
+            background-color lighten(#5bc0de, 10)
+        tr.waiting > td
+            background-color darken(#ECF0F1, 10)
+        tr.urgent > td
+            background-color #d9534f
+        tr.delivered > td
+            background-color #5cb85c
