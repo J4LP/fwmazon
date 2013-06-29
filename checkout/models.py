@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from eve.models import InvType
 from shop.models import DoctrineFit
 from decimal import Decimal as d
+from collections import Counter
 
 FITTING_PRICE = d(10000.00)
 WAITING = 0

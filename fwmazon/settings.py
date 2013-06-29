@@ -152,6 +152,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'south',
     'djcelery',
+    'mathfilters',
     'home',
     'eve',
     'manager',
