@@ -21,15 +21,19 @@ ORDER_STATUS_CHOICES = (
     (CANCELLED, 'Cancelled'),
 )
 
+
 class QuerySetManager(models.Manager):
     def get_query_set(self):
         return self.model.QuerySet(self.model)
+
     def __getattr__(self, attr, *args):
         return getattr(self.get_query_set(), attr, *args)
+
 
 class ShippingDestination(models.Model):
     name = models.CharField(max_length=200)
     short_name = models.CharField(max_length=64)
+    system = models.CharField(max_length=64)
     shipping_cost = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     active = models.BooleanField(default=False)
     delay = models.IntegerField()
