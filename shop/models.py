@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from eve.models import InvType
 from collections import Counter
+from decimal import Decimal as d
 import json
 
 
@@ -13,7 +14,8 @@ class DoctrineFit(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     fit = models.TextField()
-    price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
+    price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=d(0.00))
+    #volume = models.FloatField(default=0.0)
     """
     0 : deactivated
     1 : activated
