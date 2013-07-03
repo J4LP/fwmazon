@@ -12,32 +12,32 @@
                     <thead>
                         <tr>
                             <th>Status</th>
-                            <th>Something</th>
                             <th>Last update</th>
                             <th>Destination</th>
                             <th>Picked up by</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     {% for order in delivered_queue %}
                         <tr class="delivered">
                             <td>{{order.get_order_status_display}}</td>
-                            <td>Something</td>
                             <td>
                                 <abbr title="{{order.updated_at|date:"DATETIME_FORMAT"}}">{{order.updated_at|naturaltime}}</abbr>
                             </td>
-                            <td>{{order.shipping_destination.short_name}}</td>
-                            <td>Vadrin Hegirin</td>
+                            <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
+                            <td>{{order.contractor.character.name}}</td>
+                            <td><a href="{% url "manager-order-details" order.id %}">Details</a></td>
                         </tr>
                     {% endfor %}
                     {% for order in processing_queue %}
                         <tr class="processing">
                             <td>{{order.get_order_status_display}}</td>
-                            <td>Something</td>
                             <td>
                                 <abbr title="{{order.updated_at|date:"DATETIME_FORMAT"}}">{{order.updated_at|naturaltime}}</abbr>
                             </td>
-                            <td>{{order.shipping_destination.short_name}}</td>
-                            <td>Vadrin Hegirin</td>
+                            <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
+                            <td>{{order.contractor.character.name}}</td>
+                            <td><a href="{% url "manager-order-details" order.id %}">Details</a></td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -58,9 +58,9 @@
                                     <td>{{order.get_order_status_display}}</td>
                                     <td>{{order.volume}} m<sup>3</sup></td>
                                     <td>{{order.elements_price|intcomma}} ISK</td>
-                                    <td>{{order.shipping_destination.short_name}}</td>
+                                    <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
                                     <td>
-                                        <form action="{% url "manager-accept-order" order.id %}" method="post">
+                                        <form action="{% url "manager-order-accept" order.id %}" method="post">
                                             {% csrf_token %}
                                             <button class="btn btn-primary btn-small" type="submit">Accept</button>
                                         </form>
@@ -86,6 +86,5 @@
             </div>
         </div>
     </div>
-        
-    
+
 {% endblock %}

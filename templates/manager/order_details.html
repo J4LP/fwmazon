@@ -4,16 +4,25 @@
 {% block content %}
     <div id="manager-order-details">
         <div class="page-header">
-            <h1>Order #{{order.id}} - {{order.get_order_status_display}} <small>Mission details, hurry up !</small></h1> 
+            <h1>Order #{{order.id}} - {{order.get_order_status_display}} <small>Mission details, hurry up !</small></h1>
+            <a href="{% url "manager-queue" %}"><i class="icon-angle-left"></i> Back to the queue</a>
         </div>
         <div class="row">
             <div class="col col-lg-12">
                 <div class="panel">
                     <div class="panel-heading">Management</div>
                     {% if order.order_status == 1 %}
-                        <a href="#" class="btn btn-success">I processed the order and am shipping it</a>
+                        <form action="{% url "manager-order-update" order.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="2">
+                            <button class="btn btn-success" type="submit">I processed the order and am shipping it</button>
+                        </form>
                     {% elif order.order_status == 2 %}
-                        <a href="#" class="btn btn-success">I arrived at destination and contracted the order</a>
+                        <form action="{% url "manager-order-update" order.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="3">
+                            <button class="btn btn-success" type="submit">I arrived at destination and contracted the order</button>
+                        </form>
                     {% else %}
                         <a href="#" class="btn btn-primary" disabled>Nothing to do</a>
                     {% endif %}
@@ -59,6 +68,11 @@
             </div>
         </div>
     </div>
+    <script>
+        $("tr :checkbox").on("click", function() {
+            $(this).closest("tr").toggleClass('muted-row');
+        });
+    </script>
         
     
 {% endblock %}

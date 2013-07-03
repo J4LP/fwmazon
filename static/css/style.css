@@ -217,14 +217,20 @@ table#cart-doctrine-ships tr#sub-total td {
   margin: 5px 0 5px;
 }
 #manager-queue table tr.processing > td {
-  background-color: #85d0e7;
+  background-color: #d9edf7;
 }
 #manager-queue table tr.waiting > td {
-  background-color: #cfd9db;
+  background-color: #fcf8e3;
 }
 #manager-queue table tr.urgent > td {
-  background-color: #d9534f;
+  background-color: #f2dede;
 }
 #manager-queue table tr.delivered > td {
-  background-color: #5cb85c;
+  background-color: #d0e9c6;
+}
+#manager-order-details table tr.muted-row {
+  color: #999;
+}
+#manager-order-details table tr.muted-row a {
+  color: #999;
 }

@@ -61,9 +61,8 @@ class ManagerQueue(TemplateView):
         return context
 
 
-class ManagerAcceptOrder(View):
+class ManagerOrderAccept(View):
     def post(self, request, order_id, **kwargs):
-        print(order_id)
         try:
             order = Order.objects.get(pk=order_id)
         except Order.DoesNotExist:
@@ -83,7 +82,7 @@ class ManagerAcceptOrder(View):
         order.contractor = request.user
         order.order_status = PROCESSING
         order.save()
-        messages.success(request, 'You are now taking care of this order. Here\'s the details :')
+        messages.success(request, 'You are now taking care of this order. Here\'s the details:')
         return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
 
 
@@ -100,3 +99,32 @@ class ManagerOrderDetails(View):
             messages.error(request, 'You are not contracted to this order, you\'re bad.')
             return redirect(reverse_lazy('manager-queue'))
         return render_to_response(self.template_name, {'order': order}, context_instance=RequestContext(request))
+
+
+class ManagerOrderUpdate(View):
+    def post(self, request, order_id, **kwargs):
+        # Status validation
+        print(request.POST)
+        if not 'status' in request.POST:
+            messages.error(request, 'Form validation error')
+            return redirect(reverse_lazy('manager-queue'))
+        status = int(request.POST['status'][0])
+        if not status in [2, 3]:
+            messages.error(request, 'Form validation error')
+            return redirect(reverse_lazy('manager-queue'))
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            messages.error(request, 'Could not find order.')
+            return redirect(reverse_lazy('manager-queue'))
+        if order.contractor is None or order.contractor != request.user:
+            messages.error(request, 'This order is already being taken care of by someone else.')
+            return redirect(reverse_lazy('manager-queue'))
+        if order.order_status == WAITING:
+            messages.error(request, 'This order hasn\'t been accepted yet.')
+            return redirect(reverse_lazy('manager-queue'))
+
+        order.order_status = request.POST['status']
+        order.save()
+        messages.success(request, 'Order successfully updated')
+        return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
