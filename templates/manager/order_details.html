@@ -1,0 +1,78 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% load mathfilters %}
+{% block content %}
+    <div id="manager-order-details">
+        <div class="page-header">
+            <h1>Order #{{order.id}} - {{order.get_order_status_display}} <small>Mission details, hurry up !</small></h1>
+            <a href="{% url "manager-queue" %}"><i class="icon-angle-left"></i> Back to the queue</a>
+        </div>
+        <div class="row">
+            <div class="col col-lg-12">
+                <div class="panel">
+                    <div class="panel-heading">Management</div>
+                    {% if order.order_status == 1 %}
+                        <form action="{% url "manager-order-update" order.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="2">
+                            <button class="btn btn-success" type="submit">I processed the order and am shipping it</button>
+                        </form>
+                    {% elif order.order_status == 2 %}
+                        <form action="{% url "manager-order-update" order.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="status" value="3">
+                            <button class="btn btn-success" type="submit">I arrived at destination and contracted the order</button>
+                        </form>
+                    {% else %}
+                        <a href="#" class="btn btn-primary" disabled>Nothing to do</a>
+                    {% endif %}
+                </div>
+                <div class="panel">
+                    <div class="panel-heading">General Informations</div>
+                    <ul>
+                        <li>Client: {{order.buyer.character.name}} - <a href="#">EveMail</a> <small>(works only in IGB)</small></li>
+                        <li>Order created at: {{order.created_at|date:"DATETIME_FORMAT"}} - {{order.created_at|naturaltime}}</li>
+                        <li>Order paid at: {{order.paid_date|date:"DATETIME_FORMAT"}} - {{order.paid_date|naturaltime}}</li>
+                        <li>Shipping destination: {{order.shipping_destination.name}}</li>
+                        <li>Volume: {{order.volume|intcomma}} m<sup>3</sup></li>
+                        <li>Price of elements: {{order.elements_price|intcomma}} ISK</li>
+                        <li>Contractor: {{order.contractor.character.name}}</li>
+                    </ul>
+                </div>
+                <div class="panel">
+                    <div class="panel-heading">Shopping List</div>
+                    <p><strong>Protip:</strong> Click on an item while in-game and the market window will open. Check an item when bought so you can keep track (not saved on server so if you refresh it's gone).</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price / item</th>
+                                <th>Quantity</th>
+                                <th>Volume</th>
+                                <th>Bought</th>
+                            </tr>
+                        </thead>
+                        {% for ship in order.elements.all.ship %}
+                            {% for element in ship.doctrine_fit.elements.all %}
+                                <tr>
+                                    <td><a href="#">{{element.item.name}}</a></td>
+                                    <td class="text-right">{{element.item.price.get.price|intcomma}} ISK</td>
+                                    <td class="text-center">{{element.amount|mul:ship.amount}}</td>
+                                    <td class="text-right">{{element.item.volume|mul:ship.amount|intcomma}} m<sup>3</sup></td>
+                                    <td class="text-center"><input type="checkbox"></td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $("tr :checkbox").on("click", function() {
+            $(this).closest("tr").toggleClass('muted-row');
+        });
+    </script>
+        
+    
+{% endblock %}

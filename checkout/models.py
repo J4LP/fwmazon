@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from eve.models import InvType
 from shop.models import DoctrineFit
 from decimal import Decimal as d
+from collections import Counter
 
 FITTING_PRICE = d(10000.00)
 WAITING = 0
@@ -20,14 +21,19 @@ ORDER_STATUS_CHOICES = (
     (CANCELLED, 'Cancelled'),
 )
 
+
 class QuerySetManager(models.Manager):
     def get_query_set(self):
         return self.model.QuerySet(self.model)
+
     def __getattr__(self, attr, *args):
         return getattr(self.get_query_set(), attr, *args)
 
+
 class ShippingDestination(models.Model):
     name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=64)
+    system = models.CharField(max_length=64)
     shipping_cost = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     active = models.BooleanField(default=False)
     delay = models.IntegerField()
@@ -38,14 +44,18 @@ class Order(models.Model):
     Order model
     """
     buyer = models.ForeignKey(User, related_name='orders')
+    contractor = models.ForeignKey(User, related_name="orders_contracted", null=True)
     total_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     elements_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     volume = models.FloatField()
     shipping_fee = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     shipping_destination = models.ForeignKey(ShippingDestination)
     to_be_fitted = models.BooleanField(default=False)
+    priority_flag = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
+    paid_date = models.DateTimeField(null=True)
     order_status = models.IntegerField(default=WAITING, choices=ORDER_STATUS_CHOICES)
+    contracted_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 

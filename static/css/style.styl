@@ -28,6 +28,9 @@ a.navbar-brand
 a.navbar-link
     color #2980B9 !important
 
+.page-header
+    margin-top 0
+
 #nav-cart
     margin-right 10px 
 #brand
@@ -172,3 +175,30 @@ table#cart-doctrine-ships
 #account-orders
     a#show-details-modal
         color #fff
+
+#manager-queue
+    .page-header h1
+        margin-top 0
+    h3:first-child
+        margin-top 0
+
+    table
+        tr > td
+            vertical-align middle
+            > p
+                margin 5px 0 5px
+        tr.processing > td
+            background-color #d9edf7
+        tr.waiting > td
+            background-color #fcf8e3
+        tr.urgent > td
+            background-color #f2dede
+        tr.delivered > td
+            background-color darken(#dff0d8, 5)
+
+#manager-order-details
+    table
+        tr.muted-row
+            color #999999
+            a
+                color #999999
