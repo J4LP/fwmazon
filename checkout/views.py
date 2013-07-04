@@ -4,6 +4,8 @@ from checkout.models import ShippingDestination
 from django.views.generic import View
 from checkout.models import Order
 from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy
+from checkout.models import MONEY_RECEIVED, MONEY_SENT
 
 
 class CheckoutView(View):
@@ -35,18 +37,40 @@ class CheckoutView(View):
         else:
             # TODO: clear the cart
             messages.success(req, 'Your order has been successfully created, please proceed with the payment.')
-            return redirect('/checkout/pay/' + order.id)
+            return redirect(reverse_lazy('checkout-pay', order.id))
 
 
 class PayView(View):
     template_name = 'checkout/pay.html'
 
     def get(self, req, order_id):
-        order = Order.objects.get(pk=order_id)
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            messages.error(req, 'This order does not exist')
+            return redirect(reverse_lazy('account-order'))
         if order.buyer != req.user:
             messages.error(req, 'Security error, are you logged in ?')
             return redirect('/')
         if order.paid:
             messages.info(req, 'This order has already been paid')
-            return redirect('/account')
+            return redirect(reverse_lazy('account-order'))
         return render_to_response(self.template_name, {'order': order}, context_instance=RequestContext(req))
+
+    def post(self, req, order_id):
+        try:
+            order = Order.objects.get(pk=order_id)
+        except Order.DoesNotExist:
+            messages.error(req, 'This order does not exist')
+            return redirect(reverse_lazy('account-order'))
+        if order.buyer != req.user:
+            messages.error(req, 'Security error, are you logged in ?')
+            return redirect('/')
+        if order.paid or order.payment.status == MONEY_RECEIVED:
+            messages.info(req, 'This order has already been paid')
+            return redirect(reverse_lazy('account-order'))
+        order.payment.status = MONEY_SENT
+        order.payment.save()
+        messages.info(req, 'We are now processing your order, thanks for using Fwmazon')
+        # TODO : Make a thank you page, test if payment status is already sent
+        return redirect(reverse_lazy('account-orders'))
