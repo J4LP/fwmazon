@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from eve.models import InvType
 from shop.models import DoctrineFit
 from decimal import Decimal as d
-from collections import Counter
+import random
+import string
 
 FITTING_PRICE = d(10000.00)
 WAITING = 0
@@ -19,6 +20,13 @@ ORDER_STATUS_CHOICES = (
     (CONTRACTED, 'Contracted'),
     (FINISHED, 'Finished'),
     (CANCELLED, 'Cancelled'),
+)
+MONEY_SENT = 1
+MONEY_RECEIVED = 2
+PAYMENT_STATUS_CHOICES = (
+    (WAITING, 'Waiting for payment'),
+    (MONEY_SENT, 'Money sent'),
+    (MONEY_RECEIVED, 'Money received')
 )
 
 
@@ -44,7 +52,8 @@ class Order(models.Model):
     Order model
     """
     buyer = models.ForeignKey(User, related_name='orders')
-    contractor = models.ForeignKey(User, related_name="orders_contracted", null=True)
+    contractor = models.ForeignKey(User, related_name='orders_contracted', null=True)
+    payment = models.ForeignKey('Payment', related_name='order')
     total_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     elements_price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=0.00)
     volume = models.FloatField()
@@ -79,6 +88,9 @@ class Order(models.Model):
             elements.append(OrderElement(element_type='module', item=module))
         """
         self.save()
+        p = Payment(order=self)
+        p.key = p.generate_key()
+        p.save()
         for e in elements:
             e.order = self
             e.save()
@@ -119,6 +131,7 @@ class OrderElement(models.Model):
     element = property(_get_element)
 
     objects = QuerySetManager()
+
     class QuerySet(models.query.QuerySet):
 
         def ship(self):
@@ -126,3 +139,15 @@ class OrderElement(models.Model):
 
         def item(self):
             return self.filter(element_type="item")
+
+
+class Payment(models.Model):
+    status = models.IntegerField(default=WAITING, choices=ORDER_STATUS_CHOICES)
+    key = models.CharField(max_length=64)
+    transaction_id = models.IntegerField(max_length=15, null=True)
+    character_id = models.IntegerField(max_length=15, null=True)
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+    def generate_key(self):
+        self.key = ''.join(random.choice(string.lowercase + string.uppercase + string.digits) for x in range(64))
