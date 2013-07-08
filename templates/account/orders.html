@@ -1,0 +1,177 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div class="row col col-lg-12">
+        <ul class="nav nav-pills">
+            <li><a href="{% url "account" %}">Home</a></li>
+            <li class="active"><a href="{% url "account-orders" %}">Orders <span class="badge">{{order.current|length}}</span></a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </div>    
+    <div id="account-orders">
+        <div class="row">
+            <div class="col col-lg-12">
+                <h2>Orders</h2>
+                <p>This is the list of your orders through Fwmazon!</p>
+                <div class="panel panel-info">
+                    <div class="panel-heading">Current Orders</div>
+                    {% if orders.current %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Articles</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
+                                    <th>Time of order</th>
+                                    <th>Last updated</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            {% for order in orders.current %}
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            <li>{{order.elements.all|length}} ship{{order.elements.all|length|pluralize}}</li>
+                                            <li>{{order.elements.all|length}} module{{order.elements.all|length|pluralize}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <span class="label label-success">
+                                            <a href="#" id="show-details-modal" data-remote="/account/order_details/{{order.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
+                                        </span>
+                                    </td>
+                                    <td>{{order.get_order_status_display}}</td>
+                                    <td>{{order.created_at|date}}</td>
+                                    <td>{{order.updated_at|date}}</td>
+                                    <td>{{order.total_price|intcomma}} ISK</td>
+                                    <td>
+                                        {% if order.order_status == 0 %}
+                                            <form action="{% url "account-order-cancel" order.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button class="btn btn-danger" type="submit">Cancel</button>
+                                            </form>
+                                            
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <h5>No current orders.</h5>
+                    {% endif %}
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading">Finished Orders</div>
+                    {% if orders.finished %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Articles</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
+                                    <th>Time of order</th>
+                                    <th>Last updated</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            {% for order in orders.finished %}
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            <li>{{order.elements.all|length}} ship{{order.elements.all|length|pluralize}}</li>
+                                            <li>{{order.elements.all|length}} module{{order.elements.all|length|pluralize}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <span class="label label-success">
+                                            <a href="#" id="show-details-modal" data-remote="/account/order_details/{{order.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
+                                        </span>
+                                    </td>
+                                    <td>{{order.get_order_status_display}}</td>
+                                    <td>{{order.created_at|date}}</td>
+                                    <td>{{order.updated_at|date}}</td>
+                                    <td>{{order.total_price|intcomma}} ISK</td>
+                                    <td>
+                                        {% if order.order_status == 0 %}
+                                            <form action="{% url "account-order-cancel" order.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button class="btn btn-danger" type="submit">Cancel</button>
+                                            </form>
+                                            
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <h5>No finished orders.</h5>
+                    {% endif %}
+                </div>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">Cancelled Orders</div>
+                    {% if orders.cancelled %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Articles</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
+                                    <th>Time of order</th>
+                                    <th>Last updated</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            {% for order in orders.cancelled %}
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            <li>{{order.elements.all|length}} ship{{order.elements.all|length|pluralize}}</li>
+                                            <li>{{order.elements.all|length}} module{{order.elements.all|length|pluralize}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <span class="label label-success">
+                                            <a href="#" id="show-details-modal" data-remote="/account/order_details/{{order.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
+                                        </span>
+                                    </td>
+                                    <td>{{order.get_order_status_display}}</td>
+                                    <td>{{order.created_at|date}}</td>
+                                    <td>{{order.updated_at|date}}</td>
+                                    <td>{{order.total_price|intcomma}} ISK</td>
+                                    <td>
+                                        {% if order.order_status == 0 %}
+                                            <form action="{% url "account-order-cancel" order.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button class="btn btn-danger" type="submit">Cancel</button>
+                                            </form>
+                                            
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <h5>No cancelled orders.</h5>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="details">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Order Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger">Something wrong happened while loading the order details</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

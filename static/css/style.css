@@ -36,6 +36,9 @@ a.navbar-brand {
 a.navbar-link {
   color: #2980b9 !important;
 }
+.page-header {
+  margin-top: 0;
+}
 #nav-cart {
   margin-right: 10px;
 }
@@ -185,4 +188,49 @@ table#cart-doctrine-ships tr#fit #fit-delete {
 table#cart-doctrine-ships tr#sub-total td {
   text-align: center;
   vertical-align: middle;
+}
+#checkout-options #shipping-panel {
+  margin-top: 20px;
+}
+#checkout-options #shipping-panel select {
+  height: 40px;
+}
+#checkout-options #shipping-panel p#total-shipping {
+  margin-top: 10px;
+}
+#checkout-options #review-panel div.panel-footer {
+  text-align: right;
+}
+#account-orders a#show-details-modal {
+  color: #fff;
+}
+#manager-queue .page-header h1 {
+  margin-top: 0;
+}
+#manager-queue h3:first-child {
+  margin-top: 0;
+}
+#manager-queue table tr > td {
+  vertical-align: middle;
+}
+#manager-queue table tr > td > p {
+  margin: 5px 0 5px;
+}
+#manager-queue table tr.processing > td {
+  background-color: #d9edf7;
+}
+#manager-queue table tr.waiting > td {
+  background-color: #fcf8e3;
+}
+#manager-queue table tr.urgent > td {
+  background-color: #f2dede;
+}
+#manager-queue table tr.delivered > td {
+  background-color: #d0e9c6;
+}
+#manager-order-details table tr.muted-row {
+  color: #999;
+}
+#manager-order-details table tr.muted-row a {
+  color: #999;
 }

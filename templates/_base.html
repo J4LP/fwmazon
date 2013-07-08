@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
         <link rel="stylesheet" href="/static/css/font-awesome.min.css">
         <link rel="stylesheet" href="/static/css/style.css">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="/static/js/jquery.min.js"></script>
         <script src="/static/bootstrap/js/bootstrap.min.js"></script>
         <script src="/static/js/jquery.cookie.js"></script>
         <script src="/static/js/cart.js"></script>
@@ -22,12 +22,14 @@
                     <a href="/" class="navbar-brand">J4KB <i class="icon-dropbox"></i> Fwmazon</a></a>
                     <ul class="nav">
                         {% if user.is_authenticated %}
+                            <li><a href="{% url "account" %}">Account</a></li>
                             <li><a href="/shop">Shop</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manager<b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{% url 'create-fit' %}">Add a Doctrine Fit</a></li>
-                                    <li><a href="{% url 'list-fits' %}">List Doctrine Fit</a></li>
+                                    <li><a href="{% url 'manager-queue' %}">Order Queue</a></li>
+                                    <li><a href="{% url 'manager-create-fit' %}">Add a Doctrine Fit</a></li>
+                                    <li><a href="{% url 'manager-list-fits' %}">List Doctrine Fit</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
@@ -60,7 +62,13 @@
             </div>
         </header>
         <div class="container">
-            <div id="messages"></div>
+            <div id="messages">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{message.tags}}">{{message}}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
             {% block content %}{% endblock %}
         </div>
         <footer>

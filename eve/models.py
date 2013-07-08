@@ -185,3 +185,24 @@ class ItemPrice(models.Model):
         d = timedelta(days=1)
         self.expires = timezone.now() + d
         super(ItemPrice, self).save()
+
+
+class WalletMixin(models.Model):
+    wallet_id = models.IntegerField(primary_key=True)
+    account_key = models.IntegerField(default=1000)
+    apikey = models.ForeignKey(APIKey)
+
+    class Meta:
+        abstract = True
+
+class CorpWallet(WalletMixin):
+    name = models.CharField(max_length=255)
+
+class CorpWalletJournalEntry(models.Model):
+    wallet = models.ForeignKey(CorpWallet)
+    transaction_date = models.DateTimeField()
+    ref_type_id = models.IntegerField()
+    ref_id = models.BigIntegerField()
+
+    class Meta:
+        get_latest_by = "transaction_date"

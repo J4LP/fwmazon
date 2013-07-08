@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% block content %}
+    <div class="row col col-lg-12">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="{% url "account" %}">Home</a></li>
+            <li><a href="{% url "account-orders" %}">Orders <span class="badge">{{order.current|length}}</span></a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </div>    
+    <div id="account-home">
+        <div class="row">
+            <div class="col col-lg-12">
+                <h2>Account</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, sequi, tempora, inventore, facilis obcaecati perspiciatis laborum distinctio quia est unde vero quibusdam ipsa eligendi dolorum dolor amet corporis suscipit optio?</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

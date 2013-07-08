@@ -1,0 +1,34 @@
+{% load humanize %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    {% if order.elements.all.ship %}
+        <tr>
+            <td colspan="3"><h4>Ships</h4></td>
+        </tr>
+        {% for element in order.elements.all.ship %}
+            <tr>
+                <td>{{element.element.name}}</td>
+                <td>{{element.amount}}</td>
+                <td>{{element.price|intcomma}}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    {% if order.elements.all.item %}
+        <tr>
+            <td colspan="3"><h4>Modules</h4></td>
+        </tr>
+        {% for element in order.elements.all.item %}
+            <tr>
+                <td>{{element.element.name}}</td>
+                <td>{{element.amount}}</td>
+                <td>{{element.price|intcomma}}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+</table>

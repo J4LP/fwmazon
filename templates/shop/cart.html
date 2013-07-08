@@ -86,7 +86,7 @@
                     <td><h4><b>Total</b></h4></td>
                     <td id="sub-total">{{cart.doctrines_price|intcomma}} ISK</td>
                     <td></td>
-                    <td><a href="#" class="btn btn-success btn-block">Checkout</a></td>
+                    <td><a href="{% url "checkout" %}" class="btn btn-success btn-block">Checkout</a></td>
                 </tr>
             </table>
         {% endif %}

@@ -1,8 +1,8 @@
 {% extends "_base.html" %}
-
+{% load humanize %}
 {% block content %}
     <div id="list-fits">
-        <a href="{% url 'create-fit' %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> Add a new Fit</a>
+        <a href="{% url 'manager-create-fit' %}" class="btn btn-primary pull-right"><i class="icon-plus"></i> Add a new Fit</a>
         <h1><i class="icon-cog"></i> Doctrine Fit Management</h1>
         <p>Activate, deactivate, look at the stats, modify the description, it's all possible with Fwmazon !</p>
         <table class="table">
@@ -26,7 +26,7 @@
                         </ul>
                     </td>
                     <td id="fit-price">
-                        Price: {{fit.price}} ISK HT
+                        Price: {{fit.price|intcomma}} ISK HT
                     </td>
                     <td id="fit-number">
                         Bought {{fit.bought}} times

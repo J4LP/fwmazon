@@ -1,0 +1,90 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="manager-queue">
+        <div class="page-header">
+            <h1>Queue <small>Get in line nerd !</small></h1> 
+        </div>
+        <div class="row">
+            <div class="col col-lg-8">
+                <h3>Processing Queue</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Last update</th>
+                            <th>Destination</th>
+                            <th>Picked up by</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    {% for order in delivered_queue %}
+                        <tr class="delivered">
+                            <td>{{order.get_order_status_display}}</td>
+                            <td>
+                                <abbr title="{{order.updated_at|date:"DATETIME_FORMAT"}}">{{order.updated_at|naturaltime}}</abbr>
+                            </td>
+                            <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
+                            <td>{{order.contractor.character.name}}</td>
+                            <td><a href="{% url "manager-order-details" order.id %}">Details</a></td>
+                        </tr>
+                    {% endfor %}
+                    {% for order in processing_queue %}
+                        <tr class="processing">
+                            <td>{{order.get_order_status_display}}</td>
+                            <td>
+                                <abbr title="{{order.updated_at|date:"DATETIME_FORMAT"}}">{{order.updated_at|naturaltime}}</abbr>
+                            </td>
+                            <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
+                            <td>{{order.contractor.character.name}}</td>
+                            <td><a href="{% url "manager-order-details" order.id %}">Details</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <h3>Waiting Queue</h3>
+                    {% if waiting_queue %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Volume</th>
+                                    <th>Price</th>
+                                    <th>Destination</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            {% for order in waiting_queue %}
+                                <tr class="{% if order.priority_flag %}urgent{% else %}waiting{% endif %}">
+                                    <td>{{order.get_order_status_display}}</td>
+                                    <td>{{order.volume}} m<sup>3</sup></td>
+                                    <td>{{order.elements_price|intcomma}} ISK</td>
+                                    <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
+                                    <td>
+                                        <form action="{% url "manager-order-accept" order.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button class="btn btn-primary btn-small" type="submit">Accept</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>Nothing in the waiting queue, rejoice !</p>
+                    {% endif %}
+            </div>
+            <div class="col col-lg-4">
+                <p>This is the Queue, if you haven't read the Fwmazon Operations Manual (FOM), do so <a href="#">here</a> before doing anything.</p>
+                <p>This queue updates in real time, no need to refresh the page</p>
+                <p>Click on an order to see its details, you can then choose to accept it or reject it.</p>
+                <p>If you are accepting to process an order, it's an engagement, don't log off and comeback tomorrow.</p>
+                <p>Legend:</p>
+                <ul>
+                    <li><span class="label label-success">Delivered orders</span> Orders that have been fulfilled, they will leave the queue shortly after.</li>
+                    <li><span class="label label-info">Orders en-route</span> Orders that are being fulfilled, their status is updated through the process.</li>
+                    <li><span class="label label-danger">Urgent orders</span> Orders that are prioritized over normal ones, do them ASAP.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
