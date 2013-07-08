@@ -196,7 +196,7 @@ class WalletMixin(models.Model):
         abstract = True
         get_latest_by = "transaction_date"
 
-class CorpWallet(models.Model, WalletMixin):
+class CorpWallet(WalletMixin):
     name = models.CharField(max_length=255)
 
 class CorpWalletJournalEntry(models.Model):
