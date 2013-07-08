@@ -191,7 +191,6 @@ class WalletMixin(models.Model):
     wallet_id = models.IntegerField(primary_key=True)
     account_key = models.IntegerField(default=1000)
     apikey = models.ForeignKey(APIKey)
-    transaction_date = models.DateTimeField()
 
     class Meta:
         abstract = True
@@ -200,7 +199,8 @@ class WalletMixin(models.Model):
 class CorpWallet(models.Model, WalletMixin):
     name = models.CharField(max_length=255)
 
-class CorpWalletJournal(models.Model):
+class CorpWalletJournalEntry(models.Model):
     wallet = models.ForeignKey(CorpWallet)
+    transaction_date = models.DateTimeField()
     ref_type_id = models.IntegerField()
     ref_id = models.BigIntegerField()
