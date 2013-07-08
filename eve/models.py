@@ -194,7 +194,6 @@ class WalletMixin(models.Model):
 
     class Meta:
         abstract = True
-        get_latest_by = "transaction_date"
 
 class CorpWallet(WalletMixin):
     name = models.CharField(max_length=255)
@@ -204,3 +203,6 @@ class CorpWalletJournalEntry(models.Model):
     transaction_date = models.DateTimeField()
     ref_type_id = models.IntegerField()
     ref_id = models.BigIntegerField()
+
+    class Meta:
+        get_latest_by = "transaction_date"
