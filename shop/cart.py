@@ -65,13 +65,14 @@ class Cart(object):
     def populate(self):
         self.doctrines = []
         self.doctrines_price = 0.0
+        self.volume = 0.0
         for item_id, amount in self.items['ship'].items():
             fit = DoctrineFit.objects.get(pk=item_id)
             fit.amount = amount
             self.doctrines_price += int(fit.amount * fit.price)
             self.doctrines.append(fit)
+            self.volume += (fit.amount * fit.volume)
         for item in self.items['module']:
             # TODO
             pass
-
 

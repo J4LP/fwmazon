@@ -15,7 +15,7 @@ class DoctrineFit(models.Model):
     description = models.TextField()
     fit = models.TextField()
     price = models.DecimalField(max_digits=15, decimal_places=2, blank=True, default=d(0.00))
-    #volume = models.FloatField(default=0.0)
+    volume = models.FloatField(default=0.0)
     """
     0 : deactivated
     1 : activated
@@ -32,14 +32,21 @@ class DoctrineFit(models.Model):
         DoctrineElement(doctrine=self, element_type='ship', item=InvType.objects.get(pk=fit['ship']['ship_id']), amount=1).save()
         modules = Counter()
         drones = Counter()
+        volume = 0.0
         for module in fit['modules']:
             modules[str(module['id'])] += 1
         for drone in fit['drones']:
             drones[str(drone['id'])] += drone['amount']
         for item_id, amount in modules.items():
-            DoctrineElement(doctrine=self, element_type='module', item=InvType.objects.get(pk=item_id), amount=amount).save()
+            item = InvType.objects.get(pk=item_id)
+            volume += (item * amount)
+            DoctrineElement(doctrine=self, element_type='module', item=item, amount=amount).save()
         for item_id, amount in drones.items():
-            DoctrineElement(doctrine=self, element_type='drone', item=InvType.objects.get(pk=item_id), amount=amount).save()
+            item = InvType.objects.get(pk=item_id)
+            volume += (item * amount)
+            DoctrineElement(doctrine=self, element_type='drone', item=item, amount=amount).save()
+        self.volume = volume
+        self.save()
 
 
 class DoctrineElement(models.Model):
