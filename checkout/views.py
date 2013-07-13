@@ -24,20 +24,20 @@ class CheckoutView(View):
         try:
             shipping_destination = ShippingDestination.objects.get(pk=shipping_destination)
             if not shipping_destination.active:
-                messages.error(req, 'Something happen while creating your order, please try again.')
-                return render_to_response(self.template_name, context_instance=RequestContext(req))
+                messages.error(req, 'Something happen while creating your order, please try again. #1')
+                return redirect(reverse_lazy('checkout'))
         except ShippingDestination.DoesNotExist:
-            messages.error(req, 'Something happen while creating your order, please try again.')
-            return render_to_response(self.template_name, context_instance=RequestContext(req))
+            messages.error(req, 'Something happen while creating your order, please try again. #2')
+            return redirect(reverse_lazy('checkout'))
         try:
             order.new_order(req.cart, shipping_destination, fitting, req.user)
         except Exception:
-            messages.error(req, 'Something happen while creating your order, please try again.')
-            return render_to_response(self.template_name, context_instance=RequestContext(req))
+            messages.error(req, 'Something happen while creating your order, please try again. #3')
+            return redirect(reverse_lazy('checkout'))
         else:
             # TODO: clear the cart
             messages.success(req, 'Your order has been successfully created, please proceed with the payment.')
-            return redirect(reverse_lazy('checkout-pay', order.id))
+            return redirect(reverse_lazy('checkout-pay', order_id=order.id))
 
 
 class PayView(View):
