@@ -4,10 +4,15 @@
     <div id="checkout-payment">
         <div class="row">
             <div class="col col-lg-12">
+                {% if order.payment.status == 1 %}
+                    <div class="alert alert-danger">
+                        <strong>Warning</strong> ! It seems like you already sent the money for this order ! Make sure you're doing the right thing, and remember: <strong>no refunds !</strong>
+                    </div>
+                {% endif %}
                 <ul class="breadcrumb">
                     <li><a href="#">Fwmazon</a></li>
-                    <li><a href="#">Cart</a></li>
-                    <li><a href="#" class="text-muted">Checkout</a></li>
+                    <li class="text-muted">Cart</li>
+                    <li class="text-muted">Checkout</li>
                     <li class="active">Payment</li>
                 </ul>
                 <h1><i class="icon-money"></i> Payment</h1>
@@ -56,7 +61,7 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <h4 class="text-danger">Any transaction without the proper order key or with the wrong amount will be considered as donations and will not be refunded</h4>
+                        <h4 class="text-danger">Any transaction without the proper order key or with the wrong amount will be considered as donation and will not be refunded</h4>
                     </div>
                     <div class="panel-footer" style="text-align: right">                        
                         <form action="{% url "checkout-pay" order.id %}" method="post">
