@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from eve.models import InvType
+from eve.models import InvType, CorpWalletJournalEntry
 from shop.models import DoctrineFit
 from decimal import Decimal as d
 import random
@@ -151,8 +151,7 @@ class OrderElement(models.Model):
 class Payment(models.Model):
     status = models.IntegerField(default=WAITING, choices=ORDER_STATUS_CHOICES)
     key = models.CharField(max_length=35)
-    transaction_id = models.IntegerField(max_length=15, null=True)
-    character_id = models.IntegerField(max_length=15, null=True)
+    transaction = models.ForeignKey(CorpWalletJournalEntry, null=True)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
