@@ -61,8 +61,6 @@ class Order(models.Model):
     shipping_destination = models.ForeignKey(ShippingDestination)
     to_be_fitted = models.BooleanField(default=False)
     priority_flag = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
-    paid_date = models.DateTimeField(null=True)
     order_status = models.IntegerField(default=WAITING, choices=ORDER_STATUS_CHOICES)
     contracted_at = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
@@ -70,6 +68,9 @@ class Order(models.Model):
 
     def _get_tax(self):
         return (self.elements_price + self.shipping_fee + (FITTING_PRICE if self.to_be_fitted else d(0.0))) * d(0.01)
+
+    def _get_is_paid(self):
+        return True if self.payment.status == 2 else False
 
     def new_order(self, cart, shipping_destination, fitting, user):
         if not hasattr(cart, 'doctrines'):
@@ -104,6 +105,7 @@ class Order(models.Model):
         return self
 
     tax = property(_get_tax)
+    tax = property(_get_is_paid)
     objects = QuerySetManager()
 
     class QuerySet(models.query.QuerySet):

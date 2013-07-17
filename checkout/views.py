@@ -52,7 +52,7 @@ class PayView(View):
         if order.buyer != req.user:
             messages.error(req, 'Security error, are you logged in ?')
             return redirect('/')
-        if order.paid:
+        if order.is_paid:
             messages.info(req, 'This order has already been paid')
             return redirect(reverse_lazy('account-order'))
         return render_to_response(self.template_name, {'order': order}, context_instance=RequestContext(req))
@@ -66,7 +66,7 @@ class PayView(View):
         if order.buyer != req.user:
             messages.error(req, 'Security error, are you logged in ?')
             return redirect('/')
-        if order.paid or order.payment.status == MONEY_RECEIVED:
+        if order.is_paid or order.payment.status == MONEY_RECEIVED:
             messages.info(req, 'This order has already been paid')
             return redirect(reverse_lazy('account-order'))
         order.payment.status = MONEY_SENT
