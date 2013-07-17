@@ -11,4 +11,5 @@ urlpatterns = patterns('',
     url(r'^wallet$', ManagerWalletList.as_view(), name='manager-wallets'),
     url(r'^wallet/(?P<wallet_id>\d+)$', ManagerWalletDetails.as_view(), name='manager-wallet-details'),
     url(r'^order$', ManagerOrders.as_view(), name='manager-orders'),
+    url(r'^order_data$', ManagerOrdersDataTable.as_view(), name='manager-orders-data'),
 )

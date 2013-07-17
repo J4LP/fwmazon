@@ -8,6 +8,7 @@ billiard==2.7.3.31
 celery==3.0.21
 distribute==0.7.3
 django-celery==3.0.17
+django-datatables-view==1.5
 django-mathfilters==0.1.3
 eveapi==1.2.6
 kombu==2.5.12

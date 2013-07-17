@@ -1,11 +1,18 @@
 {% extends "_base.html" %}
 {% load humanize %}
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.css">
+{% endblock %}
+{% block js %}
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/jquery.dataTables.bootstrap.js"></script>
+{% endblock %}
 {% block content %}
     <div id="manager-wallet">
         <div class="page-header">
             <h1>Orders <small>In case someone derped hard</small></h1>
         </div>
-        <table class="table">
+        <table class="table datatable">
             <thead>
                 <tr>
                     <th>Order #</th>
@@ -14,30 +21,22 @@
                     <th>Destination</th>
                     <th>Price</th>
                     <th>Date of order</th>
+                    <th></th>
                 </tr>
             </thead>
-            {% for order in orders %}
-                <tr>
-                    <td>{{order.id}}</td>
-                    <td>{{order.buyer.character.name}}</td>
-                    <td>
-                        {% if order.order_status == 0 %}
-                            <span class="text-muted">
-                        {% elif order.order_status == 1 or order.order_status == 2 or order.order_status == 3 %}
-                            <span class="text-warning">
-                        {% elif order.order_status == 4%}
-                            <span class="text-success">
-                        {% else %}
-                            <span class="text-danger">
-                        {% endif %}
-                        {{order.get_order_status_display}}</span>
-                    </td>
-                    <td>{{order.shipping_destination.name}}</td>
-                    <td>{{order.total_price|intcomma}} ISK</td>
-                    <td>{{order.created_at|date:"SHORT_DATETIME_FORMAT"}}</td>
-                    <td><a href="{% url 'manager-order' order.id %}" class="btn btn-info btn-small">Info</a></td>
-                </tr>
-            {% endfor %}
         </table>
     </div>
+    <script>
+        $(document).ready(function() {
+            var oTable = $('.datatable').dataTable({
+                "sDom": "<'row'<'col col-lg-6'l><'col col-lg-6'f>r>t<'row'<'col col-lg-6'i><'col col-lg-6'p>>",
+                "sWrapper": "dataTables_wrapper form-inline",
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": "{% url 'manager-orders-data' %}",
+                "oLanguage": { "sSearch": "" , "sLengthMenu": "_MENU_"},
+                "sPaginationType": "bootstrap"
+            });
+        });
+    </script>
 {% endblock %}

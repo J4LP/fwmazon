@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse_lazy
 from manager.forms import FitForm
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
-
 from shop.models import DoctrineFit
 from manager.utils import Fit
 from django.shortcuts import redirect
@@ -12,6 +11,10 @@ from django.views.generic.base import View
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from eve.models import CorpWallet
+from django_datatables_view.base_datatable_view import BaseDatatableView
+from django.contrib.humanize.templatetags.humanize import intcomma
+from django.utils import formats
+
 
 class ManagerFitCreation(FormView):
     template_name = 'manager/create.html'
@@ -157,3 +160,32 @@ class ManagerOrders(TemplateView):
         context = super(ManagerOrders, self).get_context_data(**kwargs)
         context['orders'] = Order.objects.all()[:20]
         return context
+
+
+class ManagerOrdersDataTable(BaseDatatableView):
+    model = Order
+    columns = ['id', 'buyer', 'order_status', 'shipping_destination', 'total_price', 'created_at', 'actions']
+    order_columns = ['id', 'buyer', 'order_status', 'shipping_destination', 'total_price', 'created_at', '']
+    max_display_length = 30
+
+    def render_column(self, row, column):
+        if column == 'order_status':
+            if row.order_status == 0:
+                return '<span class="text-muted">%s</span>' % row.get_order_status_display()
+            elif row.order_status == 1 or row.order_status == 2 or row.order_status == 3:
+                return '<span class="text-warning">%s</span>' % row.get_order_status_display()
+            elif row.order_status == 4:
+                return '<span class="text-success">%s</span>' % row.get_order_status_display()
+            else:
+                return '<span class="text-danger">%s</span>' % row.get_order_status_display()
+        if column == 'buyer':
+            return row.buyer.character.name
+        if column == 'total_price':
+            return '%s ISK' % intcomma(row.total_price)
+        if column == 'shipping_destination':
+            return row.shipping_destination.short_name
+        if column == 'created_at':
+            return formats.date_format(row.created_at, "SHORT_DATETIME_FORMAT")
+        if column == 'actions':
+            return '<a href="/manager/order/%s" class="btn btn-info btn-small">Info</a>' % row.id
+        return super(ManagerOrdersDataTable, self).render_column(row, column)
