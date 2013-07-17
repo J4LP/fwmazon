@@ -71,7 +71,7 @@ class ManagerOrderAccept(View):
             return redirect(reverse_lazy('manager-queue'))
         if order.contractor == request.user:
             messages.error(request, 'You are already taking care of this order, nerd.')
-            return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
+            return redirect(reverse_lazy('manager-order', order.id))
         if order.contractor is not None and order.contractor != request.user:
             messages.error(request, 'This order is already being taken care of by someone else.')
             return redirect(reverse_lazy('manager-queue'))
@@ -84,11 +84,11 @@ class ManagerOrderAccept(View):
         order.order_status = PROCESSING
         order.save()
         messages.success(request, 'You are now taking care of this order. Here\'s the details:')
-        return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
+        return redirect(reverse_lazy('manager-order', order.id))
 
 
-class ManagerOrderDetails(View):
-    template_name = 'manager/order_details.html'
+class ManagerOrder(View):
+    template_name = 'manager/order.html'
 
     def get(self, request, order_id, **kwargs):
         try:
@@ -148,3 +148,12 @@ class ManagerWalletDetails(View):
             messages.error(request, 'Could not find wallet')
             return redirect(reverse_lazy('manager-wallets'))
         return render_to_response(self.template_name, {'wallet': wallet}, context_instance=RequestContext(request))
+
+
+class ManagerOrders(TemplateView):
+    template_name = 'manager/orders.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerOrders, self).get_context_data(**kwargs)
+        context['orders'] = Order.objects.all()[:20]
+        return context
