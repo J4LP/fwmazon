@@ -71,7 +71,7 @@ def process_journal():
                 try:
                     entry = CorpWalletJournalEntry.objects.get(ref_id=transaction.refID)
                 except CorpWalletJournalEntry.DoesNotExist:
-                    date = datetime.datetime.utcfromtimestamp(transaction.date)
+                    date = timezone.make_aware(datetime.datetime.utcfromtimestamp(transaction.date))
                     entry_data = {
                         'wallet': wallet,
                         'transaction_date': date,
