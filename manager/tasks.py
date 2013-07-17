@@ -2,14 +2,13 @@ from celery import task
 from shop.models import DoctrineFit
 from django.utils import timezone
 import json
-from decimal import Decimal
-from eve.models import ItemPrice, InvType
 from evejournal import EveJournal
 import eveapi
-from eve.models import APIKey, CorpWallet, CorpWalletJournalEntry
+from eve.models import ItemPrice, InvType, APIKey, CorpWallet, CorpWalletJournalEntry
 from fwmazon.redisevecache import RedisEveAPICacheHandler
 from decimal import Decimal as d
 import datetime
+from checkout.models import Payment, MONEY_RECEIVED
 
 
 # TODO: Add ammo support, and we can do better
@@ -22,7 +21,7 @@ def update_fit(fit_id):
     if doctrine_fit.updated_at > timezone.now():
         return False
     fit = json.loads(doctrine_fit.fit)
-    price = Decimal(0.0)
+    price = d(0.0)
     try:
         p = ItemPrice.objects.get(item_id=fit['ship']['ship_id'])
     except ItemPrice.DoesNotExist:
@@ -71,7 +70,7 @@ def process_journal():
                 try:
                     entry = CorpWalletJournalEntry.objects.get(ref_id=transaction.refID)
                 except CorpWalletJournalEntry.DoesNotExist:
-                    date = timezone.make_aware(datetime.datetime.utcfromtimestamp(transaction.date))
+                    date = timezone.make_aware(datetime.datetime.utcfromtimestamp(transaction.date), timezone.utc)
                     entry_data = {
                         'wallet': wallet,
                         'transaction_date': date,
@@ -84,14 +83,26 @@ def process_journal():
                     entry = CorpWalletJournalEntry(**entry_data)
                     entry.save()
                     if entry.ref_type_id == 10:
-                        process_transaction.delay(entry.id)
-
-                        #TODO TIMEZONE ACTIVATE TZINFO WAHTEVER
+                        process_transaction.delay(entry.id, delay=5)
 
 
 @task()
 def process_transaction(transaction_id):
-    raise NotImplementedError
+    try:
+        transaction = CorpWalletJournalEntry.objects.get(ref_id=transaction_id)
+    except CorpWalletJournalEntry.DoesNotExist:
+        raise CorpWalletJournalEntry.DoesNotExist
+    reason = transaction.reason.replace(' ', '').rstrip('\n')[5:]
+    try:
+        payment = Payment.objects.get(key=reason)
+    except Payment.DoesNotExist:
+        print('payment not exist')
+        return
+    if payment.status == MONEY_RECEIVED or transaction.amount != payment.order.total_price:
+        return
+    payment.status = MONEY_RECEIVED
+    payment.transaction = transaction
+    payment.save()
 
 
 @task()
