@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="manager-wallet">
+        <div class="page-header">
+            <h1>Wallet <small>{{wallet.name}}</small><span class="pull-right">{{wallet.balance}} ISK</span></h1>
+            <p>Last updated: {% now "SHORT_DATETIME_FORMAT" %}</p>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Transaction Date</th>
+                    <th>Sender</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Order</th>
+                </tr>
+            </thead>
+            {% for entry in wallet.entries.all %}
+                <tr>
+                    <td>{{entry.transaction_date|date:"DATETIME_FORMAT"}}</td>
+                    <td>{{entry.sender_name}}</td>
+                    <td>{{entry.amount|intcomma}} ISK</td>
+                    <td>{{entry.reason}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

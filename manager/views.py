@@ -11,7 +11,7 @@ from checkout.models import Order, WAITING, PROCESSING, FINISHED
 from django.views.generic.base import View
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
-
+from eve.models import CorpWallet
 
 class ManagerFitCreation(FormView):
     template_name = 'manager/create.html'
@@ -32,7 +32,8 @@ class ManagerFitCreation(FormView):
             fit=fit.to_json(),
             status=2,
             creator=self.request.user,
-        ).save()
+        )
+        doctrine.save()
         doctrine.create_elements()
         messages.success(self.request, 'The fit "%s" has been added !' % doctrine.name)
         return super(ManagerFitCreation, self).form_valid(form)
@@ -104,7 +105,6 @@ class ManagerOrderDetails(View):
 class ManagerOrderUpdate(View):
     def post(self, request, order_id, **kwargs):
         # Status validation
-        print(request.POST)
         if not 'status' in request.POST:
             messages.error(request, 'Form validation error')
             return redirect(reverse_lazy('manager-queue'))
@@ -128,3 +128,23 @@ class ManagerOrderUpdate(View):
         order.save()
         messages.success(request, 'Order successfully updated')
         return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
+
+
+class ManagerWalletList(View):
+    template_name = 'manager/wallet_list.html'
+
+    def get(self, request):
+        wallets = CorpWallet.objects.all()
+        return render_to_response(self.template_name, {'wallets': wallets}, context_instance=RequestContext(request))
+
+
+class ManagerWalletDetails(View):
+    template_name = 'manager/wallet_details.html'
+
+    def get(self, request, wallet_id):
+        try:
+            wallet = CorpWallet.objects.select_related().get(pk=wallet_id)
+        except CorpWallet.DoesNotExist:
+            messages.error(request, 'Could not find wallet')
+            return redirect(reverse_lazy('manager-wallets'))
+        return render_to_response(self.template_name, {'wallet': wallet}, context_instance=RequestContext(request))

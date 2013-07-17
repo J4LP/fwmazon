@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="manager-wallet">
+        <div class="page-header">
+            <h1>Wallets <small>Bling bling $$$</small></h1>
+            <p>Last updated: {% now "SHORT_DATETIME_FORMAT" %}</p>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Wallet Name</th>
+                    <th>Wallet ID</th>
+                    <th># Transactions</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            {% for wallet in wallets %}
+                <tr>
+                    <td><a href="{% url 'manager-wallet-details' wallet.wallet_id %}">{{wallet.name}}</a></td>
+                    <td>{{wallet.account_key}}</td>
+                    <td>{{wallet.entries.all|length}}</td>
+                    <td>{{wallet.balance|intcomma}} ISK</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
