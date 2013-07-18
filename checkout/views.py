@@ -37,8 +37,7 @@ class CheckoutView(View):
         else:
             # TODO: clear the cart
             messages.success(req, 'Your order has been successfully created, please proceed with the payment.')
-            return redirect(reverse_lazy('checkout-pay', order_id=order.id))
-
+            return redirect(reverse_lazy('checkout-pays', kwargs={'order_id': order.id}))
 
 class PayView(View):
     template_name = 'checkout/pay.html'
