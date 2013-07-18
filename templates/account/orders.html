@@ -45,7 +45,7 @@
                                     <td>{{order.updated_at|date}}</td>
                                     <td>{{order.total_price|intcomma}} ISK</td>
                                     <td>
-                                        {% if not order.paid %}
+                                        {% if not order.is_paid %}
                                             <a href="{% url 'checkout-pay' order.id %}" class="btn btn-info">Pay</a>
                                         {% endif %}
                                         {% if order.order_status == 0 %}
