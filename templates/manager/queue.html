@@ -26,7 +26,7 @@
                             </td>
                             <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
                             <td>{{order.contractor.character.name}}</td>
-                            <td><a href="{% url "manager-order-details" order.id %}">Details</a></td>
+                            <td><a href="{% url 'manager-order' order.id %}">Details</a></td>
                         </tr>
                     {% endfor %}
                     {% for order in processing_queue %}
@@ -37,7 +37,7 @@
                             </td>
                             <td><a href="http://evemaps.dotlan.net/system/{{order.shipping_destination.system}}" target="_blank">{{order.shipping_destination.short_name}}</a></td>
                             <td>{{order.contractor.character.name}}</td>
-                            <td><a href="{% url "manager-order-details" order.id %}">Details</a></td>
+                            <td><a href="{% url 'manager-order' order.id %}">Details</a></td>
                         </tr>
                     {% endfor %}
                 </table>

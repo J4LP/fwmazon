@@ -45,10 +45,13 @@
                                     <td>{{order.updated_at|date}}</td>
                                     <td>{{order.total_price|intcomma}} ISK</td>
                                     <td>
+                                        {% if not order.is_paid %}
+                                            <a href="{% url 'checkout-pay' order.id %}" class="btn btn-info">Pay</a>
+                                        {% endif %}
                                         {% if order.order_status == 0 %}
-                                            <form action="{% url "account-order-cancel" order.id %}" method="post">
+                                            <form action="{% url "account-order-cancel" order.id %}" method="post" style="display:inline;">
                                                 {% csrf_token %}
-                                                <button class="btn btn-danger" type="submit">Cancel</button>
+                                                <button class="btn btn-danger" onclick="return confirm('Do you really want to cancel this order ?');" type="submit">Cancel</button>
                                             </form>
                                             
                                         {% endif %}

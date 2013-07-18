@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from decimal import Decimal
+from decimal import Decimal as d
 import xml.etree.ElementTree as ET
 from time import sleep
 import requests
 from datetime import datetime, timedelta
+
 
 class APIKey(models.Model):
     """
@@ -13,7 +14,7 @@ class APIKey(models.Model):
     """
     id = models.IntegerField(primary_key=True, editable=True)
     vcode = models.CharField(max_length=64, editable=True)
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, null=True)
 
 
 class Character(models.Model):
@@ -162,7 +163,7 @@ class InvType(models.Model):
         
 
 class ItemPrice(models.Model):
-    price = models.DecimalField(max_digits=30, decimal_places=2, default=0.00)
+    price = models.DecimalField(max_digits=30, decimal_places=2, default=d(0.00))
     item = models.ForeignKey(InvType, related_name='price')
     expires = models.DateTimeField()
 
@@ -185,3 +186,30 @@ class ItemPrice(models.Model):
         d = timedelta(days=1)
         self.expires = timezone.now() + d
         super(ItemPrice, self).save()
+
+
+class WalletMixin(models.Model):
+    wallet_id = models.IntegerField(primary_key=True)
+    account_key = models.IntegerField(default=1000)
+    apikey = models.ForeignKey(APIKey)
+
+    class Meta:
+        abstract = True
+
+
+class CorpWallet(WalletMixin):
+    name = models.CharField(max_length=255)
+    balance = models.DecimalField(max_digits=30, decimal_places=2, default=d(0.00))
+
+
+class CorpWalletJournalEntry(models.Model):
+    wallet = models.ForeignKey(CorpWallet, related_name='entries')
+    transaction_date = models.DateTimeField()
+    ref_type_id = models.IntegerField()
+    ref_id = models.BigIntegerField()
+    sender_name = models.CharField(max_length=65)
+    amount = models.DecimalField(max_digits=30, decimal_places=2, default=d(0.00))
+    reason = models.CharField(max_length=128)
+
+    class Meta:
+        get_latest_by = "transaction_date"

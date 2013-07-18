@@ -10,10 +10,12 @@
         <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
         <link rel="stylesheet" href="/static/css/font-awesome.min.css">
         <link rel="stylesheet" href="/static/css/style.css">
+        {% block css %}{% endblock %}
         <script src="/static/js/jquery.min.js"></script>
         <script src="/static/bootstrap/js/bootstrap.min.js"></script>
         <script src="/static/js/jquery.cookie.js"></script>
         <script src="/static/js/cart.js"></script>
+        {% block js %}{% endblock %}
     </head>
     <body>
         <header>
@@ -30,6 +32,8 @@
                                     <li><a href="{% url 'manager-queue' %}">Order Queue</a></li>
                                     <li><a href="{% url 'manager-create-fit' %}">Add a Doctrine Fit</a></li>
                                     <li><a href="{% url 'manager-list-fits' %}">List Doctrine Fit</a></li>
+                                    <li><a href="{% url 'manager-wallets' %}">Wallets</a></li>
+                                    <li><a href="{% url 'manager-orders' %}">Orders</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">

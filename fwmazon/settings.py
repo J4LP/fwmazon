@@ -1,18 +1,24 @@
 # Django settings for afwmazon project.
 import os
 from django.core.urlresolvers import reverse_lazy
-
 import djcelery
+
+
 djcelery.setup_loader()
 BROKER_URL = 'amqp://guest:guest@localhost:5672/'
 CELERY_RESULT_BACKEND = "amqp"
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
+# Fwehman Brothers Holdings
+FW_KEY_ID = 2338850
+FW_VCODE = 'Fr0T2PitfHnyjIkHXERzwbqMGBGh82ZfQiPLCOebRAgSRm10zdIxNzavM1YAQ8Lm'
+FW_WALLET = 1000
+
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SOUTH_LOGGING_ON = False
-SOUTH_LOGGING_FILE = os.path.join(os.path.dirname(__file__),"south.log")
+SOUTH_LOGGING_FILE = os.path.join(os.path.dirname(__file__), "south.log")
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),

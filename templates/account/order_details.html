@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load mathfilters %}
 <table class="table">
     <thead>
         <tr>
@@ -15,7 +16,7 @@
             <tr>
                 <td>{{element.element.name}}</td>
                 <td>{{element.amount}}</td>
-                <td>{{element.price|intcomma}}</td>
+                <td>{{element.element.price|mul:element.amount|intcomma}} ISK</td>
             </tr>
         {% endfor %}
     {% endif %}
@@ -27,7 +28,7 @@
             <tr>
                 <td>{{element.element.name}}</td>
                 <td>{{element.amount}}</td>
-                <td>{{element.price|intcomma}}</td>
+                <td>{{element.element.price|mul:element.amount|intcomma}} ISK</td>
             </tr>
         {% endfor %}
     {% endif %}

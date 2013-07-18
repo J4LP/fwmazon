@@ -22,7 +22,7 @@
                             {% endfor %}
                         </select>
                     <p id="total-shipping">
-                        Total Volume: <span id="js-volume" data-volume="123456">{{123456|intcomma}}</span> m<sup>3</sup><br/>
+                        Total Volume: <span id="js-volume" data-volume="{{cart.volume}}">{{cart.volume|intcomma}}</span> m<sup>3</sup><br/>
                         Total Shipping Cost: <span id="js-shipping-cost"><span class="text-muted">Calculating...</span></span> ISK</p>
                 </div>
                 <div class="panel" id="fitting-panel">

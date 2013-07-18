@@ -4,10 +4,15 @@
     <div id="checkout-payment">
         <div class="row">
             <div class="col col-lg-12">
+                {% if order.payment.status == 1 %}
+                    <div class="alert alert-danger">
+                        <strong>Warning</strong> ! It seems like you already sent the money for this order ! Make sure you're doing the right thing, and remember: <strong>no refunds !</strong>
+                    </div>
+                {% endif %}
                 <ul class="breadcrumb">
                     <li><a href="#">Fwmazon</a></li>
-                    <li><a href="#">Cart</a></li>
-                    <li><a href="#" class="text-muted">Checkout</a></li>
+                    <li class="text-muted">Cart</li>
+                    <li class="text-muted">Checkout</li>
                     <li class="active">Payment</li>
                 </ul>
                 <h1><i class="icon-money"></i> Payment</h1>
@@ -41,8 +46,8 @@
                     <div class="row">
                         <div class="col col-lg-4">
                             <p>Open up your People & Place window, search for:</p>
-                            <input type="text" value="FWEDDIT WHATEVER HOLDING CORP" disabled>
-                            <small>Protip: If you're ordering through the Eve Online Browser, click <a href="#payment-help-panel" onclick="CCPEVE.showInfo(2, 1000115)">here</a> to open the information window</small>
+                            <input type="text" value="Fwehman Brothers Holdings" disabled>
+                            <small>Protip: If you're ordering through the Eve Online Browser, click <a href="#payment-help-panel" onclick="CCPEVE.showInfo(2, 98224234)">here</a> to open the information window</small>
                         </div>
                         <div class="col col-lg-4">
                             <p>Right click and Send Money, put the following amount:</p>
@@ -51,15 +56,19 @@
                         </div>
                         <div class="col col-lg-4">
                             <p>Put this authentication key in the reason box:</p>                            
-                            <input type="text" value="RANDOMSHIT" disabled>
-                            <small>This will be picked up by the system and act as proof of payment</small>
+                            <input type="text" value="{{order.payment.key}}" disabled>
+                            <small>This will be picked up by the system and act as proof of payment. We don't check from whom the payments come so feel free to pay with your alt or whatever.</small>
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <h4 class="text-danger">Any transaction without the proper order key or with the wrong amount will be considered as donations and will not be refunded</h4>
+                        <h4 class="text-danger">Any transaction without the proper order key or with the wrong amount will be considered as donation and will not be refunded</h4>
                     </div>
                     <div class="panel-footer" style="text-align: right">                        
-                        <a href="#" class="btn btn-success">IM DONE HERE</a>
+                        <form action="{% url "checkout-pay" order.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="sent" value="1">
+                            <button class="btn btn-success" type="submit">I sent the money</button>
+                        </form>
                     </div>
                 </div>
             </div>
