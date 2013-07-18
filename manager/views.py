@@ -1,19 +1,20 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
-from manager.forms import FitForm
-from django.views.generic import TemplateView
-from django.views.generic.edit import FormView
-from shop.models import DoctrineFit
-from manager.utils import Fit
-from django.shortcuts import redirect
-from checkout.models import Order, WAITING, PROCESSING, FINISHED, MONEY_RECEIVED
-from django.views.generic.base import View
-from django.shortcuts import render_to_response
-from django.template.context import RequestContext
-from eve.models import CorpWallet
-from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.core.urlresolvers import reverse_lazy
+from django.db.models import Q
+from django.shortcuts import redirect, render_to_response
+from django.template.context import RequestContext
 from django.utils import formats
+from django.views.generic import TemplateView
+from django.views.generic.base import View
+from django.views.generic.edit import FormView
+from django_datatables_view.base_datatable_view import BaseDatatableView
+from account.models import User
+from checkout.models import Order, WAITING, PROCESSING, FINISHED, MONEY_RECEIVED
+from eve.models import CorpWallet
+from manager.forms import FitForm
+from manager.utils import Fit
+from shop.models import DoctrineFit
 
 
 class ManagerFitCreation(FormView):
@@ -189,3 +190,30 @@ class ManagerOrdersDataTable(BaseDatatableView):
         if column == 'actions':
             return '<a href="/manager/order/%s" class="btn btn-info btn-small">Info</a>' % row.id
         return super(ManagerOrdersDataTable, self).render_column(row, column)
+
+
+class ManagerContractors(TemplateView):
+    template_name = 'manager/contractors.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerContractors, self).get_context_data(**kwargs)
+        context['contractors'] = User.objects.filter(Q(is_contractor=True) | Q(is_manager=True))
+        return context
+
+
+class ManagerContractorsDataTable(BaseDatatableView):
+    model = User
+    columns = ['username', 'character', 'email', 'orders_contracted', 'last_login', 'actions']
+    order_columns = ['username', 'character', 'email', 'orders_contracted', 'last_login', '']
+    max_display_length = 30
+
+    def render_column(self, row, column):
+        if column == 'character':
+            return row.character.name
+        if column == 'orders_contracted':
+            return len(row.orders_contracted.all())
+        if column == 'last_login':
+            return formats.date_format(row.last_login, "SHORT_DATETIME_FORMAT")
+        if column == 'actions':
+            return '<a href="#" class="btn btn-info btn-small">Profile</a>'
+        return super(ManagerContractorsDataTable, self).render_column(row, column)
