@@ -14,6 +14,8 @@ FW_KEY_ID = 2338850
 FW_VCODE = 'Fr0T2PitfHnyjIkHXERzwbqMGBGh82ZfQiPLCOebRAgSRm10zdIxNzavM1YAQ8Lm'
 FW_WALLET = 1000
 
+AUTH_USER_MODEL = 'account.User'
+
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -164,6 +166,7 @@ INSTALLED_APPS = (
     'manager',
     'shop',
     'checkout',
+    'account',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

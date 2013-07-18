@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from account.models import User
 from eve.models import InvType, CorpWalletJournalEntry
 from shop.models import DoctrineFit
 from decimal import Decimal as d
