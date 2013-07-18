@@ -6,7 +6,7 @@ from django.views.generic.edit import FormView
 from shop.models import DoctrineFit
 from manager.utils import Fit
 from django.shortcuts import redirect
-from checkout.models import Order, WAITING, PROCESSING, FINISHED
+from checkout.models import Order, WAITING, PROCESSING, FINISHED, MONEY_RECEIVED
 from django.views.generic.base import View
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -56,9 +56,9 @@ class ManagerQueue(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ManagerQueue, self).get_context_data(**kwargs)
-        waiting_queue = Order.objects.filter(paid=True).filter(order_status=WAITING).order_by('priority_flag').order_by('-paid_date')
-        processing_queue = Order.objects.filter(paid=True).exclude(order_status=WAITING).exclude(order_status=FINISHED).order_by('updated_at').order_by('-order_status')
-        delivered_queue = Order.objects.filter(paid=True).filter(order_status=FINISHED).order_by('-updated_at')
+        waiting_queue = Order.objects.filter(payment__status=MONEY_RECEIVED).filter(order_status=WAITING).order_by('priority_flag').order_by('-payment__updated_at')
+        processing_queue = Order.objects.filter(payment__status=MONEY_RECEIVED).exclude(order_status=WAITING).exclude(order_status=FINISHED).order_by('updated_at').order_by('-order_status')
+        delivered_queue = Order.objects.filter(payment__status=MONEY_RECEIVED).filter(order_status=FINISHED).order_by('-updated_at')
         context['waiting_queue'] = waiting_queue
         context['processing_queue'] = processing_queue
         context['delivered_queue'] = delivered_queue
@@ -74,7 +74,7 @@ class ManagerOrderAccept(View):
             return redirect(reverse_lazy('manager-queue'))
         if order.contractor == request.user:
             messages.error(request, 'You are already taking care of this order, nerd.')
-            return redirect(reverse_lazy('manager-order', order.id))
+            return reverse_lazy('manager-order-details', kwargs={'order_id': order.id})
         if order.contractor is not None and order.contractor != request.user:
             messages.error(request, 'This order is already being taken care of by someone else.')
             return redirect(reverse_lazy('manager-queue'))
@@ -87,7 +87,7 @@ class ManagerOrderAccept(View):
         order.order_status = PROCESSING
         order.save()
         messages.success(request, 'You are now taking care of this order. Here\'s the details:')
-        return redirect(reverse_lazy('manager-order', order.id))
+        return reverse_lazy('manager-order-details', kwargs={'order_id': order.id})
 
 
 class ManagerOrder(View):
