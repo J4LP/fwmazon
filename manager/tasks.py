@@ -1,14 +1,14 @@
-from celery import task
-from shop.models import DoctrineFit
-from django.utils import timezone
 import json
-from evejournal import EveJournal
-import eveapi
-from eve.models import ItemPrice, InvType, APIKey, CorpWallet, CorpWalletJournalEntry
-from fwmazon.redisevecache import RedisEveAPICacheHandler
-from decimal import Decimal as d
 import datetime
+from decimal import Decimal as d
+from celery import task
+from django.utils import timezone
+import eveapi
+from fwmazon.redisevecache import RedisEveAPICacheHandler
+from evejournal import EveJournal
 from checkout.models import Payment, MONEY_RECEIVED
+from eve.models import APIKey, CorpWallet, CorpWalletJournalEntry, InvType, ItemPrice
+from shop.models import DoctrineFit
 
 
 # TODO: Add ammo support, and we can do better
@@ -52,10 +52,11 @@ def update_fit(fit_id):
 
 # TODO: Make it so that it updates more than one price
 @task()
-def update_price_item(item_id):
-    item = ItemPrice.objects.get(pk=item_id)
-    item.update_price(force=True)
-    return item.price
+def update_price_item(item_ids=[]):
+    for item_id in item_ids:
+        item = ItemPrice.objects.get(pk=item_id)
+        item.update_price(force=True)
+        return item.price
 
 
 @task()
@@ -96,7 +97,6 @@ def process_transaction(transaction_id):
     try:
         payment = Payment.objects.get(key=reason)
     except Payment.DoesNotExist:
-        print('payment not exist')
         return
     if payment.status == MONEY_RECEIVED or transaction.amount != payment.order.total_price:
         return
