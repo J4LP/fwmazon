@@ -153,7 +153,7 @@ class OrderElement(models.Model):
 class Payment(models.Model):
     status = models.IntegerField(default=WAITING, choices=ORDER_STATUS_CHOICES)
     key = models.CharField(max_length=35)
-    transaction = models.ForeignKey(CorpWalletJournalEntry, null=True)
+    transaction = models.ForeignKey(CorpWalletJournalEntry, null=True, related_name='payment')
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
 
