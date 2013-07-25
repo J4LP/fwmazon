@@ -169,7 +169,7 @@ LOGGING = {
         'logstash': {
             'level': 'INFO',
             'class': 'logstash.LogstashHandler',
-            'host': '0.0.0.0',
+            'host': '172.16.42.1',
             'port': 5234
         }
     },
