@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from account.models import User
 from eve.models import InvType, CorpWalletJournalEntry
 from shop.models import DoctrineFit
 from decimal import Decimal as d
@@ -105,7 +105,7 @@ class Order(models.Model):
         return self
 
     tax = property(_get_tax)
-    tax = property(_get_is_paid)
+    is_paid = property(_get_is_paid)
     objects = QuerySetManager()
 
     class QuerySet(models.query.QuerySet):

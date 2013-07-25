@@ -1,5 +1,5 @@
 import sys, json
-from django.contrib.auth.models import User
+from account.models import User
 from eve.models import APIKey, Character
 
 

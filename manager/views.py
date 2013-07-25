@@ -1,19 +1,22 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
-from manager.forms import FitForm
-from django.views.generic import TemplateView
-from django.views.generic.edit import FormView
-from shop.models import DoctrineFit
-from manager.utils import Fit
-from django.shortcuts import redirect
-from checkout.models import Order, WAITING, PROCESSING, FINISHED, MONEY_RECEIVED
-from django.views.generic.base import View
-from django.shortcuts import render_to_response
-from django.template.context import RequestContext
-from eve.models import CorpWallet
-from django_datatables_view.base_datatable_view import BaseDatatableView
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.core.urlresolvers import reverse_lazy
+from django.db.models import Q
+from django.shortcuts import redirect, render_to_response
+from django.template.context import RequestContext
 from django.utils import formats
+from django.views.generic import TemplateView
+from django.views.generic.base import View
+from django.views.generic.edit import FormView
+from django_datatables_view.base_datatable_view import BaseDatatableView
+from account.models import User
+from checkout.models import Order, WAITING, PROCESSING, FINISHED, MONEY_RECEIVED
+from eve.models import CorpWallet
+from manager.forms import FitForm
+from manager.utils import Fit
+from shop.models import DoctrineFit
+import logging
+l = logging.getLogger('fwmazon')
 
 
 class ManagerFitCreation(FormView):
@@ -147,7 +150,8 @@ class ManagerWalletDetails(View):
     def get(self, request, wallet_id):
         try:
             wallet = CorpWallet.objects.select_related().get(pk=wallet_id)
-        except CorpWallet.DoesNotExist:
+        except CorpWallet.DoesNotExist, e:
+            l.error('CorpWallet.DoesNotExist', exc_info=1, extra={'wallet_id': wallet_id})
             messages.error(request, 'Could not find wallet')
             return redirect(reverse_lazy('manager-wallets'))
         return render_to_response(self.template_name, {'wallet': wallet}, context_instance=RequestContext(request))
@@ -189,3 +193,47 @@ class ManagerOrdersDataTable(BaseDatatableView):
         if column == 'actions':
             return '<a href="/manager/order/%s" class="btn btn-info btn-small">Info</a>' % row.id
         return super(ManagerOrdersDataTable, self).render_column(row, column)
+
+
+class ManagerContractors(TemplateView):
+    template_name = 'manager/contractors.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerContractors, self).get_context_data(**kwargs)
+        context['contractors'] = User.objects.filter(Q(is_contractor=True) | Q(is_manager=True))
+        return context
+
+
+class ManagerContractorsDataTable(BaseDatatableView):
+    model = User
+    columns = ['username', 'character', 'email', 'orders_contracted', 'last_login', 'actions']
+    order_columns = ['username', 'character', 'email', 'orders_contracted', 'last_login', '']
+    max_display_length = 30
+
+    def render_column(self, row, column):
+        if row.is_contractor is False:
+            pass
+        else:
+            if column == 'character':
+                return row.character.name
+            if column == 'orders_contracted':
+                return len(row.orders_contracted.all())
+            if column == 'last_login':
+                return formats.date_format(row.last_login, "SHORT_DATETIME_FORMAT")
+            if column == 'actions':
+                return '<a href="/manager/contractor/%s" class="btn btn-info btn-small">Profile</a>' % row.id
+            return super(ManagerContractorsDataTable, self).render_column(row, column)
+
+
+class ManagerContractor(TemplateView):
+    template_name = 'manager/contractor.html'
+    
+    def get(self, request, user_id):
+        try:
+            user = User.objects.select_related().get(pk=user_id)
+        except User.DoesNotExist, e:
+            l.error('User.DoesNotExist', exc_info=1, extra={'user_id': user_id, 'request': request})
+            messages.error(request, 'Could not find contractor')
+            return redirect(reverse_lazy('manager-contractors'))
+        orders_pending = user.orders_contracted.filter(order_status=PROCESSING)
+        return render_to_response(self.template_name, {'user': user, 'orders_pending': orders_pending}, context_instance=RequestContext(request))

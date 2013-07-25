@@ -41,8 +41,8 @@
                                         </span>
                                     </td>
                                     <td>{{order.get_order_status_display}}</td>
-                                    <td>{{order.created_at|date}}</td>
-                                    <td>{{order.updated_at|date}}</td>
+                                    <td>{{order.created_at|date:"SHORT_DATETIME_FORMAT"}}</td>
+                                    <td>{{order.updated_at|date:"SHORT_DATETIME_FORMAT"}}</td>
                                     <td>{{order.total_price|intcomma}} ISK</td>
                                     <td>
                                         {% if not order.is_paid %}

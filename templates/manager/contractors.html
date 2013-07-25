@@ -1,0 +1,42 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block css %}
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.css">
+{% endblock %}
+{% block js %}
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/jquery.dataTables.bootstrap.js"></script>
+{% endblock %}
+{% block content %}
+    <div id="manager-wallet">
+        <div class="page-header">
+            <h1>HR <small>Keep an eye on the workers</small><span class="pull-right">{{contractors|length}} hamster{{contractors|pluralize}}</span></h1>
+        </div>
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Character Name</th>
+                    <th>Email</th>
+                    <th>Orders</th>
+                    <th>Last login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var oTable = $('.datatable').dataTable({
+                "sDom": "<'row'<'col col-lg-6'l><'col col-lg-6'f>r>t<'row'<'col col-lg-6'i><'col col-lg-6'p>>",
+                "sWrapper": "dataTables_wrapper form-inline",
+                "bProcessing": true,
+                "bServerSide": true,
+                "sAjaxSource": "{% url 'manager-contractors-data' %}",
+                "oLanguage": { "sSearch": "" , "sLengthMenu": "_MENU_"},
+                "sPaginationType": "bootstrap"
+            });
+        });
+    </script>
+{% endblock %}
