@@ -1,13 +1,31 @@
-# Django settings for afwmazon project.
+# -*- coding: utf-8 -*-
+
 import os
 from django.core.urlresolvers import reverse_lazy
-import djcelery
+#import djcelery
+import dj_database_url
 
+# djcelery.setup_loader()
+# BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+# CELERY_RESULT_BACKEND = "amqp"
 
-djcelery.setup_loader()
-BROKER_URL = 'amqp://guest:guest@localhost:5672/'
-CELERY_RESULT_BACKEND = "amqp"
-SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
+
+DEBUG = os.getenv('FW_DEBUG', False)
+
+# Databases that we read from the environment
+if DEBUG:
+    DATABASES = {
+        'default' : {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(PROJECT_PATH, 'db.sqlite3')
+        }
+    }
+else:
+    DATABASES = {}
+    DATABASES['default'] =  dj_database_url.config()
+
+ALLOWED_HOSTS = ['*']
 
 # Fwehman Brothers Holdings
 FW_KEY_ID = 2338850
@@ -17,37 +35,17 @@ FW_WALLET = 1000
 AUTH_USER_MODEL = 'account.User'
 
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
-DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-SOUTH_LOGGING_ON = False
-SOUTH_LOGGING_FILE = os.path.join(os.path.dirname(__file__), "south.log")
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Vadrin Hegirin', 'vadrin@fweddit.com')
 )
-
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'fwmazon',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'fwmazon',
-        'PASSWORD': 'fwmazon',
-        'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-    }
-}
-
-# Hosts/domain names that are valid for this site; required if DEBUG is False
-# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -85,7 +83,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = 'static_files'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -96,7 +94,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(SITE_ROOT, '../', 'static'),
+    os.path.join(PROJECT_PATH, '../', 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -137,7 +135,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(SITE_ROOT, '../', 'templates'),
+    os.path.join(PROJECT_PATH   , '../', 'templates'),
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
