@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="manager-contractor">
+        <div class="page-header">
+            <h1>{{user.character.name}} <small>{{user.username}}</small></h1>
+        </div>
+        <a href="#" class="btn btn-success pull-right">New payment</a>
+        <ul>
+            <li><b>Last paid:</b> {% now  "SHORT_DATETIME_FORMAT" %} <small>(2 days, 6 hours ago)</small></li>
+            <li><b>Total paid:</b> {{12412412412|intcomma}} ISK</li>
+            <li><b>Not paid:</b> {{1112412|intcomma}} ISK</li>
+        </ul>
+        <div class="panel panel-info">
+            <div class="panel-heading">Current Orders</div>
+            {% if orders_pending %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Last updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    {% for order in orders_pending %}
+                        <tr>
+                            <td>{{order.get_order_status_display}}</td>
+                            <td>{{order.created_at|date:"SHORT_DATETIME_FORMAT"}}</td>
+                            <td>{{order.updated_at|naturaltime}}</td>
+                            <td><a href="{% url 'manager-order' order.id %}" class="btn btn-small btn-info">Infos</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h5>No current orders.</h5>
+            {% endif %}
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading">Finished Orders</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Created</th>
+                        <th>Finished in</th>
+                        <th>Bounty</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                {% for order in orders_pending %}
+                    <tr>
+                        <td>{{order.created_at|date:"SHORT_DATETIME_FORMAT"}}</td>
+                        <td>{{order.updated_at|timesince:order.created_at}}</td>
+                        <td>145,000 ISK <small>not paid</small></td>
+                        <td>
+                            <a href="{% url 'manager-order' order.id %}" class="btn btn-small btn-info">Infos</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

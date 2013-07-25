@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'^order$', ManagerOrders.as_view(), name='manager-orders'),
     url(r'^order_data$', ManagerOrdersDataTable.as_view(), name='manager-orders-data'),
     url(r'^contractor$', ManagerContractors.as_view(), name='manager-contractors'),
+    url(r'^contractor/(?P<user_id>\d+)$', ManagerContractor.as_view(), name='manager-contractor'),
     url(r'^contractor_data$', ManagerContractorsDataTable.as_view(), name='manager-contractors-data'),
 )

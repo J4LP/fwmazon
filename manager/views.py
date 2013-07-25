@@ -15,6 +15,8 @@ from eve.models import CorpWallet
 from manager.forms import FitForm
 from manager.utils import Fit
 from shop.models import DoctrineFit
+import logging
+l = logging.getLogger('fwmazon')
 
 
 class ManagerFitCreation(FormView):
@@ -148,7 +150,8 @@ class ManagerWalletDetails(View):
     def get(self, request, wallet_id):
         try:
             wallet = CorpWallet.objects.select_related().get(pk=wallet_id)
-        except CorpWallet.DoesNotExist:
+        except CorpWallet.DoesNotExist, e:
+            l.error('CorpWallet.DoesNotExist', exc_info=1, extra={'wallet_id': wallet_id})
             messages.error(request, 'Could not find wallet')
             return redirect(reverse_lazy('manager-wallets'))
         return render_to_response(self.template_name, {'wallet': wallet}, context_instance=RequestContext(request))
@@ -215,5 +218,19 @@ class ManagerContractorsDataTable(BaseDatatableView):
         if column == 'last_login':
             return formats.date_format(row.last_login, "SHORT_DATETIME_FORMAT")
         if column == 'actions':
-            return '<a href="#" class="btn btn-info btn-small">Profile</a>'
+            return '<a href="/manager/contractor/%s" class="btn btn-info btn-small">Profile</a>' % row.id
         return super(ManagerContractorsDataTable, self).render_column(row, column)
+
+
+class ManagerContractor(TemplateView):
+    template_name = 'manager/contractor.html'
+    
+    def get(self, request, user_id):
+        try:
+            user = User.objects.select_related().get(pk=user_id)
+        except User.DoesNotExist, e:
+            l.error('User.DoesNotExist', exc_info=1, extra={'user_id': user_id, 'request': request})
+            messages.error(request, 'Could not find contractor')
+            return redirect(reverse_lazy('manager-contractors'))
+        orders_pending = user.orders_contracted.filter(order_status=PROCESSING)
+        return render_to_response(self.template_name, {'user': user, 'orders_pending': orders_pending}, context_instance=RequestContext(request))
