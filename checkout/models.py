@@ -105,7 +105,7 @@ class Order(models.Model):
         return self
 
     tax = property(_get_tax)
-    tax = property(_get_is_paid)
+    is_paid = property(_get_is_paid)
     objects = QuerySetManager()
 
     class QuerySet(models.query.QuerySet):
