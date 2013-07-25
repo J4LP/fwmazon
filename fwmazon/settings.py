@@ -130,6 +130,9 @@ INSTALLED_APPS = (
     'account',
 )
 
+if not os.path.exists(os.path.join(PROJECT_PATH   , '../', 'logs')):
+    os.makedirs(os.path.join(PROJECT_PATH   , '../', 'logs'))
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
