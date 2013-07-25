@@ -1,7 +1,7 @@
 #!/bin/sh
-./manage.py syncdb
-./manage.py migrate account
-./manage.py migrate eve
-./manage.py migrate shop
-./manage.py migrate checkout
+python manage.py syncdb
+python manage.py migrate account
+python manage.py migrate eve
+python manage.py migrate shop
+python manage.py migrate checkout
 gunicorn fwmazon.wsgi
