@@ -207,7 +207,7 @@ LOGGING = {
             'formatter': 'verbose',
             'backupCount': 50,
             'maxBytes': 2 ** 20,
-            'filename': '/var/log/fwmazon.log'
+            'filename': 'logs/fwmazon.log'
         },
         'logstash': {
             'level': 'INFO',
