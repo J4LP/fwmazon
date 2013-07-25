@@ -207,12 +207,12 @@ LOGGING = {
             'formatter': 'verbose',
             'backupCount': 50,
             'maxBytes': 2 ** 20,
-            'filename': '/var/log/fwmazon/fwmazon.log'
+            'filename': '/var/log/fwmazon.log'
         },
         'logstash': {
             'level': 'INFO',
             'class': 'logstash.LogstashHandler',
-            'host': 'fwmazon.dev',
+            'host': '0.0.0.0',
             'port': 5234
         }
     },
