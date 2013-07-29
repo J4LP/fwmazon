@@ -9,7 +9,7 @@
             <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Finished Shopping ?</a>
             <br>
             <table class="table">
-                {% for fit in fits %}
+                {% for fit in object_list %}
                     <tr id="fit">
                         <td id="fit-img">
                             <img src="http://image.eveonline.com/Render/{{fit.ship.id}}_128.png" alt="Talwar">
@@ -20,7 +20,9 @@
                         </td>
                         <td id="fit-skills">
                             <h4>
-                                <span class="label label-info"><a href="#">Can I fly this ?</a></span> 
+                                {% comment %}
+                                    <span class="label label-info"><a href="#">Can I fly this ?</a></span> 
+                                {% endcomment %}
                                 <span class="label label-success">
                                     <a href="#" id="show-details-modal" data-remote="/shop/details/{{fit.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
                                 </span>
@@ -50,7 +52,7 @@
                     <h4 class="modal-title">Fit Details</h4>
                 </div>
                 <div class="modal-body">
-                    <p>One fine body&hellip;</p>
+                    <p class="text-danger">Something wrong happened while loading the fit details</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -58,5 +60,12 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('body').on('hidden.bs.modal', '#details', function () {
+                $(this).removeData('bs.modal');
+            });
+        })
+    </script>
   
 {% endblock %}
