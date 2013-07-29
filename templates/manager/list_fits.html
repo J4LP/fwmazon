@@ -12,7 +12,7 @@
                         <img src="http://image.eveonline.com/Render/{{fit.ship.id}}_128.png" alt="Talwar">
                     </td>
                     <td id="fit-desc">
-                        <h4><a href="#">{{fit.ship.name}}, {{fit.name}}</a></h4>
+                        <h4><a href="/shop/details/{{fit.id}}" id="show-details-modal" data-remote="/shop/details/{{fit.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">{{fit.ship.name}}, {{fit.name}}</a></h4>
                         <p>{{fit.description}}</p>
                     </td>
                     <td id="fit-info">
@@ -44,6 +44,29 @@
             {% endfor %}
         </table>
     </div>
+    <div class="modal fade" id="details">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Fit Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger">Something wrong happened while loading the fit details</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('body').on('hidden.bs.modal', '#details', function () {
+                $(this).removeData('bs.modal');
+            });
+        })
+    </script>
         
     
 {% endblock %}
