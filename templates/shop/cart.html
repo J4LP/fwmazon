@@ -48,6 +48,7 @@
                         </td>
                     </tr>
                 {% endfor %}
+                {% comment %}
                 <tr>
                     <td colspan="3"><h4><b>Modules</b></h4></td>
                     <td></td>
@@ -80,6 +81,7 @@
                         <a href="#" id="delete-from-cart" data-fit="{{fit.id}}" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
+                {% endcomment %}
                 <tr id="sub-total">
                     <td></td>
                     <td></td>
@@ -100,7 +102,7 @@
                     <h4 class="modal-title">Fit Details</h4>
                 </div>
                 <div class="modal-body">
-                    <p>One fine body&hellip;</p>
+                    <p class="text-danger">Something wrong happened while loading the fit details</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -108,5 +110,11 @@
             </div>
         </div>
     </div>
-  
+    <script>
+        $(document).ready(function() {
+            $('body').on('hidden.bs.modal', '#details', function () {
+                $(this).removeData('bs.modal');
+            });
+        })
+    </script>
 {% endblock %}
