@@ -77,15 +77,19 @@ class ManagerOrderAccept(View):
         try:
             order = Order.objects.get(pk=order_id)
         except Order.DoesNotExist:
+            l.error('Order.DoesNotExist Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Could not find order.')
             return redirect(reverse_lazy('manager-queue'))
         if order.contractor == request.user:
+            l.error('Order.AlreadyTakingCare Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'You are already taking care of this order, nerd.')
             return reverse_lazy('manager-order-details', kwargs={'order_id': order.id})
         if order.contractor is not None and order.contractor != request.user:
+            l.error('Order.SomeoneElseHas Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'This order is already being taken care of by someone else.')
             return redirect(reverse_lazy('manager-queue'))
         if order.order_status != WAITING:
+            l.error('Order.UndefinedError Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'An undefined error occured.')
             return redirect(reverse_lazy('manager-queue'))
         if len(request.user.contracted_orders.filter(~Q(order_status=4))) > 2:
@@ -106,9 +110,11 @@ class ManagerOrder(View):
         try:
             order = Order.objects.get(pk=order_id)
         except Order.DoesNotExist:
+            l.error('Order.DoesNotExist Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Could not find order.')
             return redirect(reverse_lazy('manager-queue'))
         if order.contractor != request.user:
+            l.error('Order.NotContracted Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'You are not contracted to this order, you\'re bad.')
             return redirect(reverse_lazy('manager-queue'))
         return render_to_response(self.template_name, {'order': order}, context_instance=RequestContext(request))
@@ -118,26 +124,32 @@ class ManagerOrderUpdate(View):
     def post(self, request, order_id, **kwargs):
         # Status validation
         if not 'status' in request.POST:
+            l.error('FormValidationError Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Form validation error')
             return redirect(reverse_lazy('manager-queue'))
         status = int(request.POST['status'][0])
         if not status in [2, 3]:
+            l.error('FormValidationError Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Form validation error')
             return redirect(reverse_lazy('manager-queue'))
         try:
             order = Order.objects.get(pk=order_id)
         except Order.DoesNotExist:
+            l.error('Order.DoesNotExist Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Could not find order.')
             return redirect(reverse_lazy('manager-queue'))
         if order.contractor is None or order.contractor != request.user:
+            l.error('Order.SomeoneElseHas Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'This order is already being taken care of by someone else.')
             return redirect(reverse_lazy('manager-queue'))
         if order.order_status == WAITING:
+            l.error('Order.NotAcceptedYet Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'This order hasn\'t been accepted yet.')
             return redirect(reverse_lazy('manager-queue'))
 
         order.order_status = request.POST['status']
         order.save()
+        l.info('Order.Updated Order#%s -> %s' % (order_id, request.POST['status']), exc_info=1, extra={'user_id': request.user.id, 'request': request})
         messages.success(request, 'Order successfully updated')
         return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
 
@@ -156,8 +168,8 @@ class ManagerWalletDetails(View):
     def get(self, request, wallet_id):
         try:
             wallet = CorpWallet.objects.select_related().get(pk=wallet_id)
-        except CorpWallet.DoesNotExist, e:
-            l.error('CorpWallet.DoesNotExist', exc_info=1, extra={'wallet_id': wallet_id})
+        except CorpWallet.DoesNotExist:
+            l.error('CorpWallet.DoesNotExist Wallet#%s' % wallet_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Could not find wallet')
             return redirect(reverse_lazy('manager-wallets'))
         return render_to_response(self.template_name, {'wallet': wallet}, context_instance=RequestContext(request))
@@ -237,7 +249,7 @@ class ManagerContractor(TemplateView):
     def get(self, request, user_id):
         try:
             user = User.objects.select_related().get(pk=user_id)
-        except User.DoesNotExist, e:
+        except User.DoesNotExist:
             l.error('User.DoesNotExist', exc_info=1, extra={'user_id': user_id, 'request': request})
             messages.error(request, 'Could not find contractor')
             return redirect(reverse_lazy('manager-contractors'))
