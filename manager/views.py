@@ -154,12 +154,13 @@ class ManagerOrderUpdate(View):
         return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
 
 
-class ManagerWalletList(View):
+class ManagerWalletList(TemplateView):
     template_name = 'manager/wallet_list.html'
 
-    def get(self, request):
-        wallets = CorpWallet.objects.all()
-        return render_to_response(self.template_name, {'wallets': wallets}, context_instance=RequestContext(request))
+    def get_context_data(self, **kwargs):
+        context = super(ManagerWalletList, self).get_context_data(**kwargs)
+        context['wallets'] = CorpWallet.objects.all()
+        return context
 
 
 class ManagerWalletDetails(View):
