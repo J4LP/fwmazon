@@ -39,11 +39,11 @@ class DoctrineFit(models.Model):
             drones[str(drone['id'])] += drone['amount']
         for item_id, amount in modules.items():
             item = InvType.objects.get(pk=item_id)
-            volume += (item * amount)
+            volume += (item.volume * amount)
             DoctrineElement(doctrine=self, element_type='module', item=item, amount=amount).save()
         for item_id, amount in drones.items():
             item = InvType.objects.get(pk=item_id)
-            volume += (item * amount)
+            volume += (item.volume * amount)
             DoctrineElement(doctrine=self, element_type='drone', item=item, amount=amount).save()
         self.volume = volume
         self.save()
