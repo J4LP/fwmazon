@@ -14,6 +14,7 @@ from checkout.models import Order, WAITING, PROCESSING, FINISHED, MONEY_RECEIVED
 from eve.models import CorpWallet
 from manager.forms import FitForm
 from manager.utils import Fit
+from manager.tasks import update_fit
 from shop.models import DoctrineFit
 import logging
 l = logging.getLogger('fwmazon')
@@ -29,6 +30,7 @@ class ManagerFitCreation(FormView):
         try:
             fit.import_eft(form.cleaned_data['fit'])
         except:
+            l.error('Could not create fit, parsing error', exc_info=1, extra={'user_id': self.request.user.id, 'request': self.request})
             messages.error(self.request, 'Parsing error, make sure the fit is in EFT format')
             return redirect(reverse_lazy('manager-create-fit'))
         doctrine = DoctrineFit(
@@ -41,6 +43,8 @@ class ManagerFitCreation(FormView):
         )
         doctrine.save()
         doctrine.create_elements()
+        update_fit.delay(doctrine.id)
+        l.info('Fit #%s created by user#%s' % (doctrine.id, self.request.user.id), extra={'user_id': self.request.user.id, 'request': self.request})
         messages.success(self.request, 'The fit "%s" has been added !' % doctrine.name)
         return super(ManagerFitCreation, self).form_valid(form)
 
