@@ -1,48 +1,69 @@
+import json
+import logging
+from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from shop.models import DoctrineFit
+from django.views.generic import ListView, View
+from django.views.generic.base import TemplateView
 from eve.models import InvType
-from django.http import HttpResponse
-from cart import CartForm, Cart
-import json
+from shop.cart import CartForm
+from shop.models import DoctrineFit
 
-def shop(req):
-    fits = DoctrineFit.objects.all()
-    return render_to_response('shop/shop.html', {'fits': fits}, context_instance=RequestContext(req))
-
-def shop_details(req, fit_id):
-    fit = DoctrineFit.objects.get(pk=fit_id)
-    fit.fit = json.loads(fit.fit)
-    modules = [InvType.objects.get(pk=x['id']) for x in fit.fit['modules']]
-    drones = [{'item':InvType.objects.get(pk=x['id']), 'amount': x['amount']} for x in fit.fit['drones']]
-    return render_to_response('shop/fit_details.html', {'fit': fit, 'modules': modules, 'drones': drones}, context_instance=RequestContext(req))
+l = logging.getLogger('fwmazon')
 
 
-def cart_view(req):
-    cart = req.cart
-    cart.populate()
-    return render_to_response('shop/cart.html', {'cart': cart}, context_instance=RequestContext(req))
+class ShopView(ListView):
+    model = DoctrineFit
+    template_name = 'shop/shop.html'
 
 
-def cart_add(req):
-    if req.method == 'POST':
-        form = CartForm(req.POST)
+class DoctrineDetailsView(View):
+    template_name = 'shop/fit_details.html'
+
+    def get(self, request, fit_id):
+        try:
+            fit = DoctrineFit.objects.get(pk=fit_id)
+        except DoctrineFit.DoesNotExist:
+            l.error('DoctrineFit.DoesNotExist DoctrineFit#%s' % fit_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
+            messages.error(request, 'Could not find this doctrine fit')
+            return redirect(reverse_lazy('shop'))
+        fit.fit = json.loads(fit.fit)
+        modules = [InvType.objects.get(pk=x['id']) for x in fit.fit['modules']]
+        drones = [{'item':InvType.objects.get(pk=x['id']), 'amount': x['amount']} for x in fit.fit['drones']]
+        return render_to_response(self.template_name, {'fit': fit, 'modules': modules, 'drones': drones}, context_instance=RequestContext(request))
+
+
+class CartView(TemplateView):
+    template_name = 'shop/cart.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(CartView, self).get_context_data(**kwargs)
+        context['cart'] = self.request.cart
+        context['cart'].populate()
+        return context
+
+
+class CartAddView(View):
+    def post(self, request):
+        form = CartForm(request.POST)
         if form.is_valid():
-            req.cart.add(req, form.cleaned_data['item_type'], form.cleaned_data['item_id'], form.cleaned_data['amount'])
-        return HttpResponse(req.cart.to_json(), mimetype='application/json')
+            request.cart.add(request, form.cleaned_data['item_type'], form.cleaned_data['item_id'], form.cleaned_data['amount'])
+        return HttpResponse(request.cart.to_json(), mimetype='application/json')
 
 
-def cart_update(req):
-    if req.method == 'POST':        
-        form = CartForm(req.POST)
+class CartUpdateView(View):
+    def post(self, request):
+        form = CartForm(request.POST)
         if form.is_valid():
-            req.cart.update(req, form.cleaned_data['item_type'], form.cleaned_data['item_id'], form.cleaned_data['amount'])
-        return HttpResponse(req.cart.to_json(), mimetype='application/json')
+            request.cart.update(request, form.cleaned_data['item_type'], form.cleaned_data['item_id'], form.cleaned_data['amount'])
+        return HttpResponse(request.cart.to_json(), mimetype='application/json')
 
 
-def cart_delete(req):
-    if req.method == 'POST':        
-        form = CartForm(req.POST)
+class CartDeleteView(View):
+    def post(self, request):
+        form = CartForm(request.POST)
         if form.is_valid():
-            req.cart.delete(req, form.cleaned_data['item_type'], form.cleaned_data['item_id'])
-        return HttpResponse(req.cart.to_json(), mimetype='application/json')
+            request.cart.delete(request, form.cleaned_data['item_type'], form.cleaned_data['item_id'])
+        return HttpResponse(request.cart.to_json(), mimetype='application/json')

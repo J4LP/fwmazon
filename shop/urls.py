@@ -1,11 +1,13 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
+from shop.views import *
 
 
 urlpatterns = patterns('',
-    url(r'^$', 'shop.views.shop', name='shop'),
-    url(r'^details/(?P<fit_id>\d+)$', 'shop.views.shop_details', name='shop-details'),
-    url(r'^cart/add$', 'shop.views.cart_add', name='cart-add'),
-    url(r'^cart/update$', 'shop.views.cart_update', name='cart-update'),
-    url(r'^cart/delete$', 'shop.views.cart_delete', name='cart-delete'),
-    url(r'^cart$', 'shop.views.cart_view', name='cart'),
+    url(r'^$', login_required(ShopView.as_view()), name='shop'),
+    url(r'^details/(?P<fit_id>\d+)$', login_required(DoctrineDetailsView.as_view()), name='shop-details'),
+    url(r'^cart/add$', login_required(CartAddView.as_view()), name='cart-add'),
+    url(r'^cart/update$', login_required(CartUpdateView.as_view()), name='cart-update'),
+    url(r'^cart/delete$', login_required(CartDeleteView.as_view()), name='cart-delete'),
+    url(r'^cart$', login_required(CartView.as_view()), name='cart'),
 )
