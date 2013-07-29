@@ -88,8 +88,10 @@ class ManagerOrderAccept(View):
         if order.order_status != WAITING:
             messages.error(request, 'An undefined error occured.')
             return redirect(reverse_lazy('manager-queue'))
-        # TODO : Add check for number of orders https://github.com/Fweddit/fwmazon/issues/1
-        # TODO : Check if the user can contract the orders
+        if len(request.user.contracted_orders.filter(~Q(order_status=4))) > 2:
+            l.error('Order.MaximumContractedOrders Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
+            messages.error(request, 'You already have contracted the maximum of orders allowed.')
+            return redirect(reverse_lazy('manager-queue'))
         order.contractor = request.user
         order.order_status = PROCESSING
         order.save()
