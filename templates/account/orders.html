@@ -40,7 +40,15 @@
                                             <a href="#" id="show-details-modal" data-remote="/account/order_details/{{order.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
                                         </span>
                                     </td>
-                                    <td>{{order.get_order_status_display}}</td>
+                                    <td>
+                                        {% if order.payment.status == 0 %}
+                                            <span class="text-danger">Not paid</span>
+                                        {% elif order.payment.status == 1 %}
+                                            <span class="text-warning">Waiting for payment</span>
+                                        {% else %}
+                                            {{order.get_order_status_display}}
+                                        {% endif %}
+                                    </td>
                                     <td>{{order.created_at|date:"SHORT_DATETIME_FORMAT"}}</td>
                                     <td>{{order.updated_at|date:"SHORT_DATETIME_FORMAT"}}</td>
                                     <td>{{order.total_price|intcomma}} ISK</td>
