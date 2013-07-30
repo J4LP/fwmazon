@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 from time import sleep
 import requests
 from datetime import datetime, timedelta
+import logging
+l = logging.getLogger('fwmazon')
 
 
 class APIKey(models.Model):
@@ -160,25 +162,26 @@ class InvType(models.Model):
 
     def __str__(self):
         return self.__unicode__()
-        
+
 
 class ItemPrice(models.Model):
     price = models.DecimalField(max_digits=30, decimal_places=2, default=d(0.00))
-    item = models.ForeignKey(InvType, related_name='price')
+    item = models.ForeignKey(InvType, related_name='price', unique=True)
     expires = models.DateTimeField()
 
     def update_price(self, force=False):
+        l.info('Trying to update price for #%s' % self.item.id)
         if self.expires is None or self.expires < timezone.now() or force is True:
-            price = 0.0
+            price = d(0.0)
             try:
                 r = requests.get('http://api.eve-central.com/api/marketstat?typeid=' + str(self.item.id) + '&usesystem=30000142')
                 root = ET.fromstring(r.text)
                 all = root[0][0].find('all')
-                price = all.find('avg').text
+                price = d(all.find('avg').text)
                 sleep(1)
             except:
                 pass
-            self.price = Decimal(price)
+            self.price = price
             self.save()
         return
 
