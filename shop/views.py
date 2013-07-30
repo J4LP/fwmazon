@@ -38,11 +38,12 @@ class DoctrineDetailsView(View):
 class CartView(TemplateView):
     template_name = 'shop/cart.html'
     
-    def get_context_data(self, **kwargs):
-        context = super(CartView, self).get_context_data(**kwargs)
-        context['cart'] = self.request.cart
-        context['cart'].populate()
-        return context
+    def get(self, request):
+        if self.request.cart.length == 0:
+            messages.info(request, 'Your cart is empty, you should put some ships in it !')
+            return redirect(reverse_lazy('shop'))
+        self.request.cart.populate()
+        return render_to_response(self.template_name, {'cart': self.request.cart}, context_instance=RequestContext(request))
 
 
 class CartAddView(View):
