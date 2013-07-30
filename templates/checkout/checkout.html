@@ -25,16 +25,18 @@
                         Total Volume: <span id="js-volume" data-volume="{{cart.volume}}">{{cart.volume|intcomma}}</span> m<sup>3</sup><br/>
                         Total Shipping Cost: <span id="js-shipping-cost"><span class="text-muted">Calculating...</span></span> ISK</p>
                 </div>
-                <div class="panel" id="fitting-panel">
-                    <div class="panel-heading"><i class="icon-wrench"></i> Fitting</div>
-                    <p>Fwmazon's ships come unfitted but they can be fitted, ready to be blown up on reception for a small price !</p>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" id="fitting" name="fitting" value="fitting">
-                            Fit my ships (<span id="js-fitting-price" data-price="100000">{{1000000|intcomma}}</span> ISK)
-                        </label>
+                {% comment %}
+                    <div class="panel" id="fitting-panel">
+                        <div class="panel-heading"><i class="icon-wrench"></i> Fitting</div>
+                        <p>Fwmazon's ships come unfitted but they can be fitted, ready to be blown up on reception for a small price !</p>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="fitting" name="fitting" value="fitting">
+                                Fit my ships (<span id="js-fitting-price" data-price="100000">{{1000000|intcomma}}</span> ISK)
+                            </label>
+                        </div>
                     </div>
-                </div>
+                {% endcomment %}
                 <div class="panel" id="review-panel">
                     <div class="panel-heading"><i class="icon-money"></i> Review and Pay</div>
                     <table class="table">

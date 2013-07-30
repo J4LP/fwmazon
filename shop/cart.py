@@ -76,3 +76,7 @@ class Cart(object):
             # TODO
             pass
 
+    def clear(self, request):
+        for item_id, amount in self.items['ship'].items():
+            del(self.items['ship'][str(item_id)])
+        self.save(request)

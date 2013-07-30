@@ -1,0 +1,20 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block content %}
+    <div id="checkout-thanks">
+        <div class="row">
+            <div class="col col-lg-12">
+                <h1>Thanks you for using Fwmazon!</h1>
+                <p>We are going to process your payment as soon as possible and get started on preparing and shipping your command !</p>
+                <p>You are going to be redirected to your account page, but if it doesn't, click <a href="{% url 'account-orders' %}">here</a></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).on('ready', function() {
+            setTimeout(function() {
+                window.location = "{% url 'account-orders' %}"
+            }, 3000)
+        })
+    </script>
+{% endblock %}
