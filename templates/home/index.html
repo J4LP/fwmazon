@@ -3,13 +3,14 @@
 {% block content %}
     <div id="brand">
         <h1><i class="icon-dropbox"></i> Fwmazon</h1>
-        <h2 id="subtitle">Managing your market orders since 1765</h2>
+        <h2 id="subtitle">Order. Pay. Explode.</h2>
         {% if user.is_authenticated %}
             <a href="/shop" id="go-shopping" class="btn btn-success"><i class="icon-shopping-cart"></i> Go Shopping !</a>
         {% else %}
-            <a href="/login" id="login" class="btn btn-primary">Login with your Auth External Account</a>
+            <a href="/login" id="login" class="btn btn-primary disabled">Beta access :soon:</a>
         {% endif %}
     </div>
+</div>
     <div class="splash visible-lg">
         <h3 class="splash-header">Buy any doctrine ships and get them delivered to you</h3>
     </div>
