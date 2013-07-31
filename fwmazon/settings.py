@@ -2,16 +2,16 @@
 
 import os
 from django.core.urlresolvers import reverse_lazy
-#import djcelery
+import djcelery
 import dj_database_url
 
-# djcelery.setup_loader()
-# BROKER_URL = 'amqp://guest:guest@localhost:5672/'
-# CELERY_RESULT_BACKEND = "amqp"
+djcelery.setup_loader()
+BROKER_URL = os.getenv('FWM_BROKER', '')
+CELERY_RESULT_BACKEND = "amqp"
 
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 
-DEBUG = os.getenv('FW_DEBUG', False)
+DEBUG = os.getenv('FWM_DEBUG', False)
 
 # Databases that we read from the environment
 if DEBUG:
@@ -23,7 +23,8 @@ if DEBUG:
     }
 else:
     DATABASES = {}
-    DATABASES['default'] =  dj_database_url.config()
+    DATABASES['default'] =  dj_database_url.config(default='postgres://fwmazon:fwmazon@127.0.0.1/fwmazon')
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -34,7 +35,6 @@ FW_WALLET = 1000
 
 AUTH_USER_MODEL = 'account.User'
 
-INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
