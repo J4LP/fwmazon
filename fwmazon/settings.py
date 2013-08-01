@@ -177,6 +177,15 @@ LOGGING = {
         'fwmazon': {
             'handlers': ['syslog', 'console', 'logstash'],
             'level': 'INFO',
+        },
+        'django': {
+            'handlers': ['syslog', 'console', 'logstash'],
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['syslog', 'console', 'logstash'],
+            'level': 'INFO',
+            'propagate': False,
         }
     }
 }
