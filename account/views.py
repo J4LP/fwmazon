@@ -1,3 +1,4 @@
+import logging
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
@@ -6,8 +7,9 @@ from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic.base import View
 from checkout.models import Order
-import logging
+
 l = logging.getLogger('fwmazon')
+
 
 class AccountHomeView(TemplateView):
     template_name = "account/account.html"
@@ -37,12 +39,14 @@ class AccountOrderDetailView(View):
             messages.error(request, 'Could not find the order.')
             return redirect('/')
         if order.buyer != request.user:
-            l.error('PermissionDenied', exc_info=1, extra={'user_id': request.user.id, 'request': request})
+            l.error('PermissionDenied', exc_info=1, extra={
+                    'user_id': request.user.id, 'request': request})
             raise PermissionDenied
         return render_to_response(self.template_name, {'order': order}, context_instance=RequestContext(request))
 
 
 class AccountOrderCancelView(View):
+
     def post(self, request, order_id):
         try:
             order = Order.objects.get(pk=order_id)
@@ -50,9 +54,11 @@ class AccountOrderCancelView(View):
             messages.error(request, 'Could not find the order.')
             return redirect('/')
         if order.buyer != request.user:
-            l.error('PermissionDenied', exc_info=1, extra={'user_id': request.user.id, 'request': request})
+            l.error('PermissionDenied', exc_info=1, extra={
+                    'user_id': request.user.id, 'request': request})
             raise PermissionDenied
         order.order_status = 99
         order.save()
-        l.info('Order cancelled by user action', extra={'user_id': request.user.id, 'request': request})
+        l.info('Order cancelled by user action', extra={
+               'user_id': request.user.id, 'request': request})
         return redirect(reverse_lazy('account-orders'))
