@@ -27,17 +27,27 @@
                         {% if user.is_authenticated %}
                             <li><a href="{% url "account" %}">Account</a></li>
                             <li><a href="/shop">Shop</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manager<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{% url 'manager-queue' %}">Order Queue</a></li>
-                                    <li><a href="{% url 'manager-create-fit' %}">Add a Doctrine Fit</a></li>
-                                    <li><a href="{% url 'manager-list-fits' %}">List Doctrine Fit</a></li>
-                                    <li><a href="{% url 'manager-wallets' %}">Wallets</a></li>
-                                    <li><a href="{% url 'manager-orders' %}">Orders</a></li>
-                                    <li><a href="{% url 'manager-contractors' %}">Contractors</a></li>
-                                </ul>
-                            </li>
+                            {% if user.is_contractor and not user.is_manager %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contractor<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{% url 'manager-queue' %}">Order Queue</a></li>
+                                        <li><a href="#">Contractor space</a></li>
+                                    </ul>
+                                </li>
+                            {% elif user.is_manager %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manager<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{% url 'manager-queue' %}">Order Queue</a></li>
+                                        <li><a href="{% url 'manager-create-fit' %}">Add a Doctrine Fit</a></li>
+                                        <li><a href="{% url 'manager-list-fits' %}">List Doctrine Fit</a></li>
+                                        <li><a href="{% url 'manager-wallets' %}">Wallets</a></li>
+                                        <li><a href="{% url 'manager-orders' %}">Orders</a></li>
+                                        <li><a href="{% url 'manager-contractors' %}">Contractors</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">J4LP Links<b class="caret"></b></a>
                                 <ul class="dropdown-menu">

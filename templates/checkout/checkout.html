@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
 {% load humanize %}
+{% load waffle_tags %}
+
 {% block content %}
     <div id="checkout-options">
         <div class="row">
@@ -58,7 +60,14 @@
                         </tr>
                         <tr>
                             <td>Amount to Pay:</td>
-                            <td><b><span id="js-review-total">{{99999999999999|intcomma}}</span> ISK</b></td>
+                            <td>
+                                {% switch beta %}
+                                    <b>1 ISK and some cents</b> EXCEPTIONAL BETA PRICE
+                                {% else %}
+                                    <b><span id="js-review-total">{{99999999999999|intcomma}}</span> ISK</b>
+                                {% endswitch %}
+                                
+                            </td>
                         </tr>
                     </table>
                     <div class="panel-footer">
