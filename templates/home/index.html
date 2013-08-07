@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load waffle_tags %}
 
 {% block content %}
     <div id="brand">
@@ -7,7 +8,11 @@
         {% if user.is_authenticated %}
             <a href="/shop" id="go-shopping" class="btn btn-success"><i class="icon-shopping-cart"></i> Go Shopping !</a>
         {% else %}
-            <a href="/login" id="login" class="btn btn-primary disabled">Beta access :soon:</a>
+            {% switch beta %}
+                <a href="/login" id="login" class="btn btn-primary">GOGOGOGOGOGOGOGO BETA ACCESS YES YES YES OP</a>
+            {% else %}
+                <a href="/login" id="login" class="btn btn-primary disabled">Beta access :soon:</a>
+            {% endswitch %}
         {% endif %}
     </div>
 </div>

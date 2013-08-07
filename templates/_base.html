@@ -1,3 +1,4 @@
+{% load waffle_tags %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -68,6 +69,13 @@
         </header>
         <div class="container">
             <div id="messages">
+                {% if user.is_authenticated %}
+                    {% switch beta %}
+                        <div class="alert alert-info">
+                            Thanks for being part of Fwmazon Beta ! Please read the guidelines <a href="#">here</a> and report any bugs. Enjoy !
+                        </div>
+                    {% endswitch %}
+                {% endif %}                
                 {% if messages %}
                     {% for message in messages %}
                         <div class="alert alert-{{message.tags}}">{{message}}</div>
