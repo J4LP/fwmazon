@@ -16,14 +16,15 @@ DEBUG = os.getenv('FWM_DEBUG', False)
 # Databases that we read from the environment
 if DEBUG:
     DATABASES = {
-        'default' : {
+        'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(PROJECT_PATH, 'db.sqlite3')
         }
     }
 else:
     DATABASES = {}
-    DATABASES['default'] =  dj_database_url.config(default='postgres://fwmazon:fwmazon@127.0.0.1/fwmazon')
+    DATABASES['default'] = dj_database_url.config(
+        default='postgres://fwmazon:fwmazon@127.0.0.1/fwmazon')
 
 
 ALLOWED_HOSTS = ['*']
@@ -90,7 +91,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
     'shop.middleware.CartMiddleware',
+
 )
 
 ROOT_URLCONF = 'fwmazon.urls'
@@ -98,7 +101,7 @@ ROOT_URLCONF = 'fwmazon.urls'
 WSGI_APPLICATION = 'fwmazon.wsgi.application'
 
 TEMPLATE_DIRS = (
-    os.path.join(PROJECT_PATH   , '../', 'templates'),
+    os.path.join(PROJECT_PATH, '../', 'templates'),
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
@@ -109,6 +112,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'shop.context_processors.cart',
+    'django.core.context_processors.request',
 
 )
 INSTALLED_APPS = (
@@ -128,10 +132,11 @@ INSTALLED_APPS = (
     'shop',
     'checkout',
     'account',
+    'waffle',
 )
 
-if not os.path.exists(os.path.join(PROJECT_PATH   , '../', 'logs')):
-    os.makedirs(os.path.join(PROJECT_PATH   , '../', 'logs'))
+if not os.path.exists(os.path.join(PROJECT_PATH, '../', 'logs')):
+    os.makedirs(os.path.join(PROJECT_PATH, '../', 'logs'))
 
 LOGGING = {
     'version': 1,
