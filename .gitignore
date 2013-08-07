@@ -3,3 +3,6 @@
 .ropeproject
 *.sublime-*
 Guardfile
+logs/
+static_files/
+fwmazon/db.sqlite3
