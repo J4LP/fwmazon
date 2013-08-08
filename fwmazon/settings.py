@@ -10,7 +10,7 @@ HUEY = {
     'connection': {'host': 'localhost', 'port': 6379},
 
     # Options to pass into the consumer when running ``manage.py run_huey``
-    'consumer_options': {'workers': 4},
+    'consumer_options': {'workers': 4, 'logfile': 'huey.log'},
 }
 
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
