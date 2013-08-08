@@ -43,7 +43,7 @@ class ManagerFitCreation(FormView):
         )
         doctrine.save()
         doctrine.create_elements()
-        update_fit.delay(doctrine.id)
+        update_fit(doctrine.id)
         l.info('Fit #%s created by user#%s' % (doctrine.id, self.request.user.id), extra={'user_id': self.request.user.id, 'request': self.request})
         messages.success(self.request, 'The fit "%s" has been added !' % doctrine.name)
         return super(ManagerFitCreation, self).form_valid(form)

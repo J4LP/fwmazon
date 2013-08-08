@@ -2,12 +2,16 @@
 
 import os
 from django.core.urlresolvers import reverse_lazy
-import djcelery
 import dj_database_url
 
-djcelery.setup_loader()
-BROKER_URL = os.getenv('FWM_BROKER', '')
-CELERY_RESULT_BACKEND = "amqp"
+HUEY = {
+    'backend': 'huey.backends.redis_backend',  # required.
+    'name': 'fwmazon',
+    'connection': {'host': 'localhost', 'port': 6379},
+
+    # Options to pass into the consumer when running ``manage.py run_huey``
+    'consumer_options': {'workers': 4},
+}
 
 PROJECT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -124,7 +128,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'south',
-    'djcelery',
     'mathfilters',
     'home',
     'eve',
@@ -133,6 +136,7 @@ INSTALLED_APPS = (
     'checkout',
     'account',
     'waffle',
+    'huey.djhuey',
 )
 
 if not os.path.exists(os.path.join(PROJECT_PATH, '../', 'logs')):

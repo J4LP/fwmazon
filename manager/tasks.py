@@ -1,7 +1,8 @@
 import json
 import datetime
+import logging
 from decimal import Decimal
-from celery import task
+from huey.djhuey import task
 from django.utils import timezone
 import eveapi
 from fwmazon.redisevecache import RedisEveAPICacheHandler
@@ -9,8 +10,7 @@ from evejournal import EveJournal
 from checkout.models import Payment, MONEY_RECEIVED
 from eve.models import APIKey, CorpWallet, CorpWalletJournalEntry, InvType, ItemPrice
 from shop.models import DoctrineFit
-from celery.utils.log import get_task_logger
-l = get_task_logger('fwmazon')
+l = logging.getLogger('fwmazon')
 
 
 # TODO: Add ammo support, and we can do better
@@ -93,7 +93,7 @@ def process_journal():
                     entry = CorpWalletJournalEntry(**entry_data)
                     entry.save()
                     if entry.ref_type_id == 10:
-                        process_transaction.delay(entry.id, delay=5)
+                        process_transaction.schedule(args=(entry.id,), delay=5)
 
 
 @task()
