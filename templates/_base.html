@@ -71,7 +71,7 @@
                     {% if user.is_authenticated %}
                         <p class="navbar-text pull-right">Hello {{user.character.name}} ! <a href="/logout" class="navbar-link">Logout</a></p>
                         <ul class="nav pull-right" id="nav-cart">
-                            <li><a href="{% url "cart" %}">{{cart.length}} articles in the cart. Checkout</a></li>
+                            <li><a href="{% url "cart" %}" id="cart-navbar" data-container="body" data-toggle="popover" data-placement="bottom" data-content="One or more items have been added to your cart !" data-original-title="" title="" data-trigger="hover">{{cart.length}} articles in the cart. Checkout</a></li>
                         </ul>
                     {% endif %}
                 </div>
@@ -102,6 +102,16 @@
                 </div>
             </div>           
         </footer>
+        {% if cart_modified %}
+        <script>            
+            $(document).ready(function() {
+                $('#cart-navbar').popover('show');
+                setTimeout(function() {
+                    $('#cart-navbar').popover('hide').popover('destroy')
+                }, 3000);
+            });
+        </script>
+        {% endif %}
         <script type="text/javascript">
         /*var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-33491732-1']);

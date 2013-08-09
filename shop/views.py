@@ -18,6 +18,13 @@ class ShopView(ListView):
     model = DoctrineFit
     template_name = 'shop/shop.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ShopView, self).get_context_data(**kwargs)
+        if 'cart_modified' in self.request.session:
+            context['cart_modified'] = True
+            del(self.request.session['cart_modified'])
+        return context
+
 
 class DoctrineDetailsView(View):
     template_name = 'shop/fit_details.html'
@@ -51,6 +58,7 @@ class CartAddView(View):
         form = CartForm(request.POST)
         if form.is_valid():
             request.cart.add(request, form.cleaned_data['item_type'], form.cleaned_data['item_id'], form.cleaned_data['amount'])
+        request.session['cart_modified'] = True
         return HttpResponse(request.cart.to_json(), mimetype='application/json')
 
 
@@ -59,6 +67,7 @@ class CartUpdateView(View):
         form = CartForm(request.POST)
         if form.is_valid():
             request.cart.update(request, form.cleaned_data['item_type'], form.cleaned_data['item_id'], form.cleaned_data['amount'])
+            request.session['cart_modified'] = True
         return HttpResponse(request.cart.to_json(), mimetype='application/json')
 
 
@@ -67,4 +76,5 @@ class CartDeleteView(View):
         form = CartForm(request.POST)
         if form.is_valid():
             request.cart.delete(request, form.cleaned_data['item_type'], form.cleaned_data['item_id'])
+            request.session['cart_modified'] = True
         return HttpResponse(request.cart.to_json(), mimetype='application/json')
