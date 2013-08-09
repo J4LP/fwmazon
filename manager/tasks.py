@@ -16,7 +16,8 @@ l = logging.getLogger('fwmazon')
 # TODO: Add ammo support, and we can do better
 @task()
 def update_fit(fit_id):
-    l.info('Starting update_fit task DoctrineFit#%s' % fit_id, extra={'fit_id': fit_id})
+    l.info('Starting update_fit task DoctrineFit#%s' %
+           fit_id, extra={'fit_id': fit_id})
     try:
         doctrine_fit = DoctrineFit.objects.get(pk=fit_id)
     except DoctrineFit.DoesNotExist:
@@ -54,7 +55,8 @@ def update_fit(fit_id):
     doctrine_fit.status = 1
     doctrine_fit.price = price
     doctrine_fit.save()
-    l.info('Ended update_fit task DoctrineFit#%s' % fit_id, extra={'fit_id': fit_id})
+    l.info('Ended update_fit task DoctrineFit#%s' %
+           fit_id, extra={'fit_id': fit_id})
 
 
 # TODO: Make it so that it updates more than one price
@@ -67,20 +69,22 @@ def update_price_item(item_ids=[]):
         return item.price
 
 
-@task()
 def process_journal():
     l.info('Starting process_journal')
     wallets = CorpWallet.objects.all()
     for wallet in wallets:
+        l.info('Processing wallet#%s' % wallet.account_key)
         journal = EveJournal(wallet.account_key)
         for page in journal:
             if page is None:
                 break
             for transaction in page:
                 try:
-                    entry = CorpWalletJournalEntry.objects.get(ref_id=transaction.refID)
+                    entry = CorpWalletJournalEntry.objects.get(
+                        ref_id=transaction.refID)
                 except CorpWalletJournalEntry.DoesNotExist:
-                    date = timezone.make_aware(datetime.datetime.utcfromtimestamp(transaction.date), timezone.utc)
+                    date = timezone.make_aware(
+                        datetime.datetime.utcfromtimestamp(transaction.date), timezone.utc)
                     entry_data = {
                         'wallet': wallet,
                         'transaction_date': date,
@@ -98,7 +102,8 @@ def process_journal():
 
 @task()
 def process_transaction(transaction_id):
-    l.info('Starting process_transaction', extra={'transaction': transaction_id})
+    l.info('Starting process_transaction',
+           extra={'transaction': transaction_id})
     try:
         transaction = CorpWalletJournalEntry.objects.get(ref_id=transaction_id)
     except CorpWalletJournalEntry.DoesNotExist:
@@ -113,19 +118,29 @@ def process_transaction(transaction_id):
     payment.status = MONEY_RECEIVED
     payment.transaction = transaction
     payment.save()
+    l.info('Transaction processed', extra={'transaction': transaction_id})
 
 
 @task()
 def update_wallets():
     l.info('Starting update_wallets')
-    api_key = APIKey.objects.get(pk=2338850)
-    api = eveapi.EVEAPIConnection(cacheHandler=RedisEveAPICacheHandler(debug=True)).auth(keyID=api_key.id, vCode=api_key.vcode)
+    try:
+        api_key = APIKey.objects.get(pk=2338850)
+    except APIKey.DoesNotExist:
+        l.error('Could not find api key to update wallets')
+        raise APIKey.DoesNotExist
+    api = eveapi.EVEAPIConnection(cacheHandler=RedisEveAPICacheHandler(debug=True)).auth(
+        keyID=api_key.id, vCode=api_key.vcode)
     balance = api.corp.AccountBalance()
     for account in balance.accounts:
         try:
             wallet = CorpWallet.objects.get(wallet_id=account.accountID)
         except CorpWallet.DoesNotExist:
-            wallet_data = {'wallet_id': account.accountID, 'account_key': account.accountKey, 'apikey': api_key, 'name': 'Not named #%s' % account.accountID}
+            wallet_data = {
+                'wallet_id': account.accountID, 'account_key': account.accountKey,
+                'apikey': api_key, 'name': 'Not named #%s' % account.accountID}
             wallet = CorpWallet(**wallet_data)
         wallet.balance = Decimal(account.balance)
         wallet.save()
+        l.info('Updated Wallet#%s' % wallet.account_key)
+    l.info('Finished updating wallets')

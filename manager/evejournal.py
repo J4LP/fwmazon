@@ -22,8 +22,10 @@ class EveJournal(object):
         try:
             self.redis = redis.StrictRedis()
             self.db_oldest_transaction = self.redis.get('evejournal:last_transaction')
-            if self.db_oldest_transaction is not None or self.db_oldest_transaction != 'None':
+            try:
                 self.db_oldest_transaction = int(self.db_oldest_transaction)
+            except ValueError:
+                self.db_oldest_transaction = None
         except redis.exceptions.ConnectionError:
             raise redis.exceptions.ConnectionError('Please ensure you have redis up and running')
 
