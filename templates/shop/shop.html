@@ -31,11 +31,9 @@
                         <td id="fit-price">
                             Price: {{fit.price|intcomma}} ISK HT
                         </td>
-                        <td id="fit-number">
-                            <input type="number" name="amount" data-id="{{fit.id}}" data-type="ship" value="1" min="1">
-                        </td>
                         <td id="fit-add">
-                            <a href="#" id="add-to-cart" data-id="{{fit.id}}" data-type="ship" class="btn btn-primary"><i class="icon-plus"></i> Add</a>
+                            <input type="hidden" name="amount" data-id="{{fit.id}}" data-type="ship" value="1" min="1">
+                            <a href="#" id="add-to-cart" data-id="{{fit.id}}" data-type="ship" class="btn btn-primary btn-block btn-small"><i class="icon-plus"></i> Add</a>
                         </td>
                     </tr>
                 {% endfor %}
