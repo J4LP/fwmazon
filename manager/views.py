@@ -83,7 +83,7 @@ class ManagerOrderAccept(View):
         if order.contractor == request.user:
             l.error('Order.AlreadyTakingCare Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'You are already taking care of this order, nerd.')
-            return reverse_lazy('manager-order-details', kwargs={'order_id': order.id})
+            return reverse_lazy('manager-order', kwargs={'order_id': order.id})
         if order.contractor is not None and order.contractor != request.user:
             l.error('Order.SomeoneElseHas Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'This order is already being taken care of by someone else.')
@@ -100,7 +100,7 @@ class ManagerOrderAccept(View):
         order.order_status = PROCESSING
         order.save()
         messages.success(request, 'You are now taking care of this order. Here\'s the details:')
-        return reverse_lazy('manager-order-details', kwargs={'order_id': order.id})
+        return redirect(reverse_lazy('manager-order', kwargs={'order_id': order.id}))
 
 
 class ManagerOrder(View):
@@ -113,10 +113,11 @@ class ManagerOrder(View):
             l.error('Order.DoesNotExist Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Could not find order.')
             return redirect(reverse_lazy('manager-queue'))
-        if order.contractor != request.user:
-            l.error('Order.NotContracted Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
-            messages.error(request, 'You are not contracted to this order, you\'re bad.')
-            return redirect(reverse_lazy('manager-queue'))
+        if not request.user.is_contractor:
+            if order.contractor != request.user:
+                l.error('Order.NotContracted Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
+                messages.error(request, 'You are not contracted to this order, you\'re bad.')
+                return redirect(reverse_lazy('manager-queue'))
         return render_to_response(self.template_name, {'order': order}, context_instance=RequestContext(request))
 
 
@@ -151,7 +152,7 @@ class ManagerOrderUpdate(View):
         order.save()
         l.info('Order.Updated Order#%s -> %s' % (order_id, request.POST['status']), exc_info=1, extra={'user_id': request.user.id, 'request': request})
         messages.success(request, 'Order successfully updated')
-        return redirect(reverse_lazy('manager-order-details', kwargs={'order_id': order.id}))
+        return redirect(reverse_lazy('manager-order', kwargs={'order_id': order.id}))
 
 
 class ManagerWalletList(TemplateView):
