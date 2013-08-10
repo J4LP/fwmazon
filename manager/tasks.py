@@ -119,7 +119,7 @@ def process_transaction(entry_id):
     payment.status = MONEY_RECEIVED
     payment.transaction = transaction
     payment.save()
-    l.info('Transaction processed', extra={'transaction': transaction_id})
+    l.info('Transaction processed', extra={'transaction': entry_id})
 
 
 @task()
