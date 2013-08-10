@@ -92,7 +92,7 @@ class ManagerOrderAccept(View):
             l.error('Order.UndefinedError Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'An undefined error occured.')
             return redirect(reverse_lazy('manager-queue'))
-        if len(request.user.contracted_orders.filter(~Q(order_status=4))) > 2:
+        if len(request.user.orders_contracted.filter(~Q(order_status=4))) > 2:
             l.error('Order.MaximumContractedOrders Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'You already have contracted the maximum of orders allowed.')
             return redirect(reverse_lazy('manager-queue'))
