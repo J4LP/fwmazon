@@ -231,18 +231,18 @@ class ManagerContractorsDataTable(BaseDatatableView):
     max_display_length = 30
 
     def render_column(self, row, column):
-        if row.is_contractor is False:
-            pass
-        else:
-            if column == 'character':
-                return row.character.name
-            if column == 'orders_contracted':
-                return len(row.orders_contracted.all())
-            if column == 'last_login':
-                return formats.date_format(row.last_login, "SHORT_DATETIME_FORMAT")
-            if column == 'actions':
-                return '<a href="/manager/contractor/%s" class="btn btn-info btn-small">Profile</a>' % row.id
-            return super(ManagerContractorsDataTable, self).render_column(row, column)
+        if column == 'character':
+            return row.character.name
+        if column == 'orders_contracted':
+            return len(row.orders_contracted.all())
+        if column == 'last_login':
+            return formats.date_format(row.last_login, "SHORT_DATETIME_FORMAT")
+        if column == 'actions':
+            return '<a href="/manager/contractor/%s" class="btn btn-info btn-small">Profile</a>' % row.id
+        return super(ManagerContractorsDataTable, self).render_column(row, column)
+
+    def filter_queryset(self, qs):
+        return qs.filter(Q(is_contractor=True)|Q(is_manager=True))
 
 
 class ManagerContractor(TemplateView):
