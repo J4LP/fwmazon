@@ -69,6 +69,7 @@ def update_price_item(item_ids=[]):
         return item.price
 
 
+@task()
 def process_journal():
     l.info('Starting process_journal')
     wallets = CorpWallet.objects.all()
@@ -101,11 +102,11 @@ def process_journal():
 
 
 @task()
-def process_transaction(transaction_id):
+def process_transaction(entry_id):
     l.info('Starting process_transaction',
-           extra={'transaction': transaction_id})
+           extra={'transaction': entry_id})
     try:
-        transaction = CorpWalletJournalEntry.objects.get(ref_id=transaction_id)
+        transaction = CorpWalletJournalEntry.objects.get(pk=entry_id)
     except CorpWalletJournalEntry.DoesNotExist:
         raise CorpWalletJournalEntry.DoesNotExist
     reason = transaction.reason.replace(' ', '').rstrip('\n')[5:]
@@ -113,7 +114,7 @@ def process_transaction(transaction_id):
         payment = Payment.objects.get(key=reason)
     except Payment.DoesNotExist:
         return
-    if payment.status == MONEY_RECEIVED or transaction.amount != payment.order.total_price:
+    if payment.status == MONEY_RECEIVED or transaction.amount != payment.order.get().total_price:
         return
     payment.status = MONEY_RECEIVED
     payment.transaction = transaction
