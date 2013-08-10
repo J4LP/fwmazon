@@ -232,7 +232,10 @@ class ManagerContractorsDataTable(BaseDatatableView):
 
     def render_column(self, row, column):
         if column == 'character':
-            return row.character.name
+            try:
+                return row.character.name
+            except:
+                return 'No character associated'
         if column == 'orders_contracted':
             return len(row.orders_contracted.all())
         if column == 'last_login':
@@ -242,7 +245,8 @@ class ManagerContractorsDataTable(BaseDatatableView):
         return super(ManagerContractorsDataTable, self).render_column(row, column)
 
     def filter_queryset(self, qs):
-        return qs.filter(Q(is_contractor=True)|Q(is_manager=True))
+        qs = qs.filter(Q(is_contractor=True)|Q(is_manager=True))
+        return qs
 
 
 class ManagerContractor(TemplateView):
