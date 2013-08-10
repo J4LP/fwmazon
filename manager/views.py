@@ -113,7 +113,7 @@ class ManagerOrder(View):
             l.error('Order.DoesNotExist Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
             messages.error(request, 'Could not find order.')
             return redirect(reverse_lazy('manager-queue'))
-        if not request.user.is_contractor:
+        if not request.user.is_manager:
             if order.contractor != request.user:
                 l.error('Order.NotContracted Order#%s' % order_id, exc_info=1, extra={'user_id': request.user.id, 'request': request})
                 messages.error(request, 'You are not contracted to this order, you\'re bad.')
