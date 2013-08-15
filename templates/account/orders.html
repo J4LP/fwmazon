@@ -7,7 +7,7 @@
             <li class="active"><a href="{% url "account-orders" %}">Orders <span class="badge">{{order.current|length}}</span></a></li>
             <li><a href="#">Settings</a></li>
         </ul>
-    </div>    
+    </div>
     <div id="account-orders">
         <div class="row">
             <div class="col col-lg-12">
@@ -31,8 +31,7 @@
                                 <tr>
                                     <td>
                                         <ul>
-                                            <li>{{order.elements.all|length}} ship{{order.elements.all|length|pluralize}}</li>
-                                            <li>{{order.elements.all|length}} module{{order.elements.all|length|pluralize}}</li>
+                                            <li>{{order.total_ships}} ship{{order.total_ships|pluralize}}</li>
                                         </ul>
                                     </td>
                                     <td>
@@ -61,7 +60,7 @@
                                                 {% csrf_token %}
                                                 <button class="btn btn-danger" onclick="return confirm('Do you really want to cancel this order ?');" type="submit">Cancel</button>
                                             </form>
-                                            
+
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -108,7 +107,7 @@
                                                 {% csrf_token %}
                                                 <button class="btn btn-danger" type="submit">Cancel</button>
                                             </form>
-                                            
+
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -155,7 +154,7 @@
                                                 {% csrf_token %}
                                                 <button class="btn btn-danger" type="submit">Cancel</button>
                                             </form>
-                                            
+
                                         {% endif %}
                                     </td>
                                 </tr>

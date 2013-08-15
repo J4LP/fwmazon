@@ -104,7 +104,7 @@ class Order(models.Model):
         for module in cart.modules:
             elements.append(OrderElement(element_type='module', item=module))
         """
-        
+
         if waffle.switch_is_active('beta'):
             self.total_price = d(1.0)
         else:
@@ -120,8 +120,16 @@ class Order(models.Model):
             e.save()
         return self
 
+    def _get_total_ships(self):
+        ships = 0
+        for element in self.elements.all():
+            if element.element_type == 'doctrine':
+                ships += element.amount
+        return ships
+
     tax = property(_get_tax)
     is_paid = property(_get_is_paid)
+    total_ships = property(_get_total_ships)
     objects = QuerySetManager()
 
     class QuerySet(models.query.QuerySet):
