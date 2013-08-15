@@ -184,4 +184,12 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('body').on('hidden.bs.modal', '#details', function () {
+                $(this).removeData('bs.modal');
+            });
+        })
+    </script>
 {% endblock %}
