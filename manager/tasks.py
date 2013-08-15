@@ -1,4 +1,3 @@
-import json
 import datetime
 import logging
 from decimal import Decimal
@@ -8,7 +7,7 @@ import eveapi
 from fwmazon.redisevecache import RedisEveAPICacheHandler
 from evejournal import EveJournal
 from checkout.models import Payment, MONEY_RECEIVED
-from eve.models import APIKey, CorpWallet, CorpWalletJournalEntry, InvType, ItemPrice
+from eve.models import APIKey, CorpWallet, CorpWalletJournalEntry, ItemPrice
 from shop.models import DoctrineFit
 l = logging.getLogger('fwmazon')
 
@@ -22,36 +21,9 @@ def update_fit(fit_id):
         doctrine_fit = DoctrineFit.objects.get(pk=fit_id)
     except DoctrineFit.DoesNotExist:
         return False
-    if doctrine_fit.updated_at > timezone.now() or doctrine_fit.status == 0:
-        return False
-    fit = json.loads(doctrine_fit.fit)
     price = Decimal(0.0)
-    try:
-        p = ItemPrice.objects.get(item_id=fit['ship']['ship_id'])
-    except ItemPrice.DoesNotExist:
-        p = ItemPrice()
-        p.item = InvType.objects.get(pk=fit['ship']['ship_id'])
-        p.save()
-    p.update_price(force=True)
-    price += p.price
-    for m in fit['modules']:
-        try:
-            p = ItemPrice.objects.get(item_id=m['id'])
-        except ItemPrice.DoesNotExist:
-            p = ItemPrice()
-            p.item = InvType.objects.get(pk=m['id'])
-            p.save()
-        p.update_price(force=True)
-        price += p.price
-    for d in fit['drones']:
-        try:
-            p = ItemPrice.objects.get(item_id=d['id'])
-        except ItemPrice.DoesNotExist:
-            p = ItemPrice()
-            p.item = InvType.objects.get(pk=m['id'])
-            p.save()
-        p.update_price(force=True)
-        price += (p.price * d['amount'])
+    for element in doctrine_fit.elements.all():
+        price += (element.get_price() * element.amount)
     doctrine_fit.status = 1
     doctrine_fit.price = price
     doctrine_fit.save()

@@ -169,9 +169,9 @@ class ItemPrice(models.Model):
     item = models.ForeignKey(InvType, related_name='price', unique=True)
     expires = models.DateTimeField()
 
-    def update_price(self, force=False):
+    def update_price(self):
         l.info('Trying to update price for #%s' % self.item.id)
-        if self.expires is None or self.expires < timezone.now() or force is True:
+        if self.expires is None or self.expires < timezone.now():
             price = d(0.0)
             try:
                 r = requests.get('http://api.eve-central.com/api/marketstat?typeid=' + str(self.item.id) + '&usesystem=30000142')
@@ -184,6 +184,13 @@ class ItemPrice(models.Model):
             self.price = price
             self.save()
         return
+
+    def get_price(self, force=False):
+        if self.expires is None or self.expires < timezone.now():
+            self.update_price(force)
+            return self.price
+        else:
+            return self.price
 
     def save(self, *args, **kwargs):
         d = timedelta(days=1)

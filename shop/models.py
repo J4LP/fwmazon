@@ -1,6 +1,6 @@
 from django.db import models
 from account.models import User
-from eve.models import InvType
+from eve.models import InvType, ItemPrice
 from collections import Counter
 from decimal import Decimal as d
 import json
@@ -54,3 +54,10 @@ class DoctrineElement(models.Model):
     element_type = models.CharField(max_length=20)
     item = models.ForeignKey(InvType, null=True, blank=True)
     amount = models.IntegerField(default=1)
+
+    def get_price(self):
+        try:
+            price = self.item.price.get()
+        except ItemPrice.DoesNotExist:
+            price = ItemPrice(item=self.item)
+        return price.get_price()
