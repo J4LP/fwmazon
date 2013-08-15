@@ -4,9 +4,9 @@
     <div id="shop">
         <h1><i class="icon-shopping-cart"></i> It's shopping time !</h1>
         <p>Here's how it works, Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, aspernatur, quidem labore laudantium incidunt blanditiis soluta ducimus nulla magnam inventore explicabo reprehenderit praesentium repellat. Doloribus, dolorem laudantium animi eveniet cumque.</p>
-        
+
         <div id="fit-list">
-            <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Finished Shopping ?</a>
+            <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Checkout</a>
             <br>
             <table class="table">
                 {% for fit in object_list %}
@@ -21,7 +21,7 @@
                         <td id="fit-skills">
                             <h4>
                                 {% comment %}
-                                    <span class="label label-info"><a href="#">Can I fly this ?</a></span> 
+                                    <span class="label label-info"><a href="#">Can I fly this ?</a></span>
                                 {% endcomment %}
                                 <span class="label label-success">
                                     <a href="#" id="show-details-modal" data-remote="/shop/details/{{fit.id}}" data-keyboard="true" data-backdrop="fade" data-toggle="modal" data-target="#details">Details</a>
@@ -37,11 +37,11 @@
                         </td>
                     </tr>
                 {% endfor %}
-            </table>            
-            <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Finished Shopping ?</a>
+            </table>
+            <a href="{% url "cart" %}" class="btn btn-success btn-small pull-right">Checkout</a>
         </div>
     </div>
-    
+
     <div class="modal fade" id="details">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -65,5 +65,5 @@
             });
         })
     </script>
-  
+
 {% endblock %}
