@@ -6,7 +6,7 @@ class Shipping
         @_volume = $('span#js-volume').data('volume')
         @init_events()
         @update_shipping()
-    
+
     init_events: ->
         $('body').on('change', 'select#shipping', @update_shipping)
 
@@ -29,7 +29,7 @@ window.hide_message = (id) ->
     $("#messages #message-#{id}").remove()
 
 window.to_comma = (int) ->
-        return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        return Math.round(int).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 class CostUpdater
     constructor: ->
